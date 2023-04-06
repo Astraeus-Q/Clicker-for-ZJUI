@@ -1,10 +1,13 @@
 // CSMA/CA Algorithm test coding on arduino board
 // Mainly refer from example code for basic setup.
-#include <./LibSPI/SPI.h> // delete LibSpi when compile.
-#include <nRF24L01.h>
+#include <./Libs/SPI.h> // delete LibSpi when compile.
+#include "nRF24L01.h"
 #include <RF24.h>
+#include "arduino/Libs/EEPROM.h"
 #include <cstdlib>
-#include <string>
+#include <cstring>
+// modify the library before compile.
+#include "./Libs/SPI.h"
 // not used in final compile.
 #include <cstdint>
 // add arduino SPI.
@@ -21,7 +24,9 @@ uint8_t radioAddr = 1; // Using # address to Transmit
 
 int8_t NodeID = -1;
 
-bool Rxmode = 0; // True for rx mode, false for Tx mode.
+char classID[8]; // class ID would take 1 bytes. stored in string.
+
+uint8_t channelID = 0; // default running on 2.400 Ghz.
 
 typedef struct Payload_clicker{
     char msg[7];
@@ -188,6 +193,10 @@ void loop(){
 }
 
 // Handshake with the server and read about the node ID and current class.
+// using default channel to communicate with the
+// @global parameters affected: NodeID, channelID, classID.
+// @return: return the status of the communication.
+
 uint8_t pair(uint8_t* base_addr){
     // assume an ID was attached to the arduino flash.
     radio.toggleAllPipes(false);
@@ -211,6 +220,6 @@ uint8_t pair(uint8_t* base_addr){
 
     // receive for the handshake message.
 
-    // TODO: Under investigation. We need to design the pairing model.
+    // TODO: Under investigation. We need to design the pairing model
 
 }
