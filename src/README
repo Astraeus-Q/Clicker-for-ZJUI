@@ -1,0 +1,3 @@
+Compile Notes:
+1. Only one main program can be added. Need to Remove one out of the CMAKE list.
+2. Migrate the functions to the lib dir to make the code tidy.

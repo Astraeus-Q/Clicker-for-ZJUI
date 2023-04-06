@@ -1,13 +1,13 @@
 // CSMA/CA Algorithm test coding on arduino board
 // Mainly refer from example code for basic setup.
-#include <./Libs/SPI.h> // delete LibSpi when compile.
+#include "../include/SPI.h" // delete LibSpi when compile.
 #include "nRF24L01.h"
 #include <RF24.h>
 #include "arduino/Libs/EEPROM.h"
 #include <cstdlib>
 #include <cstring>
 // modify the library before compile.
-#include "./Libs/SPI.h"
+#include "../include/SPI.h"
 // not used in final compile.
 #include <cstdint>
 // add arduino SPI.
