@@ -147,6 +147,8 @@ void loop() {
         delay(300);
     }
 
+    // sleeping code.
+
     startPressed = millis();
     timer -=1;
     if (timer <=0){
