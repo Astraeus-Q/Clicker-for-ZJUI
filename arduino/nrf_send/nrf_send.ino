@@ -14,11 +14,11 @@ const byte address[6] = "00001";
 void setup() {
   radio.begin();
   radio.openWritingPipe(address);
-  radio.setPALevel(RF24_PA_MIN);
+  radio.setPALevel(RF24_PA_MAX);
   radio.stopListening();
 }
 void loop() {
-  const char text[] = "Hello World";
+  const char text[] = "A   6749601";
   radio.write(&text, sizeof(text));
   delay(1000);
 }
