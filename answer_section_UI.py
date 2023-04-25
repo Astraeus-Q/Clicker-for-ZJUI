@@ -8,7 +8,6 @@ import threading
 import time
 
 import course_section_UI as cs
-import Clicker_UI as cui
 import Clicker_backend as cbd
 
 
@@ -22,6 +21,8 @@ class Answer_section(QMainWindow):
         self.ui.label_7.setMaximumSize(8100, 1000)
         self.ui.label_7.setPixmap(scared_bar)
         self.ui.setWindowTitle(course_name)
+        self.ui.lineEdit.setEchoMode(QLineEdit.Password) # Hide the password digit.
+        self.first = 0 # Avoid Repeat USB Initialization
 
         # -----Buttons-----
         # Button: Start
@@ -44,12 +45,19 @@ class Answer_section(QMainWindow):
 
 
     def start_ans(self):
-        port = "COM4"
-        cbd.USB_init(port)
+        if self.first == 0:
+            self.first = 1
+            port = "COM5"
+            cbd.USB_init(port)
         t_lim = self.ui.spinBox.value()*60 + self.ui.spinBox_2.value()
         self.ans_time = float(t_lim)
         cbd.ans_dict = {}
-        self.t_display.start()
+        cbd.running = 1
+        self.correct = self.ui.lineEdit.text()
+        if self.correct in ['A', 'B', 'C', 'D']:
+            self.t_display.start()
+        else:
+            print(QMessageBox.warning(self, "Oops", "Please Choose a Correct Answer form A, B, C or D", QMessageBox.Yes))
 
     def refresh_and_collect(self):
         # Update time display.
@@ -72,8 +80,7 @@ class Answer_section(QMainWindow):
         return
     
     def plotting(self):
-        correct = self.ui.lineEdit.text()
-        cbd.plot_answer(cbd.ans_dict, correct)
+        cbd.plot_answer(cbd.ans_dict, self.correct)
         # cbd.plot_attendance()
         return
     

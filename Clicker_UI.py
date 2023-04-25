@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtGui import QIcon
 #import qdarkstyle
 import base64
 import configparser
@@ -33,7 +34,7 @@ class logindialog(QDialog,Ui_Form):
         password = self.pw_edit.text()
         #print('studentId',studentId, password)
         if (studentId == "" or password == ""):
-            print(QMessageBox.warning(self, "Oops", "Username or Password could not be Empty!", QMessageBox.Yes, QMessageBox.Yes))
+            print(QMessageBox.warning(self, "Oops", "Username or Password could not be Empty!", QMessageBox.Yes))
             return
         else:
             # th=tesql()
@@ -44,7 +45,7 @@ class logindialog(QDialog,Ui_Form):
 
             #result
             if result[2]==0:
-                print(QMessageBox.information(self, "Warning", "Invaild Username!", QMessageBox.Yes, QMessageBox.Yes))
+                print(QMessageBox.information(self, "Warning", "Invaild Username!", QMessageBox.Yes))
                 return
             else:
                 if (5 == result[1] and hl.hexdigest() == result[3]):
@@ -88,6 +89,7 @@ class logindialog(QDialog,Ui_Form):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon("UI/emoji.png"))
     #app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
 
     dialog = logindialog()

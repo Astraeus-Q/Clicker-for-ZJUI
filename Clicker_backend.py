@@ -115,7 +115,7 @@ def USB_read_cont(port:str, timelim)->Clicker_resp:
 
 def plot_answer(stu_ans:dict, correct):
     plt.figure()
-    plt.title("Student Answers")
+    plt.title("Correct Answers: " + correct)
     plt.xlabel("Options")
     plt.ylabel("Number")
 
@@ -147,7 +147,7 @@ def collect_ans(timelim):
     stu_ans = {}
 
     
-    port = "COM4"
+    port = "COM5"
     for c in USB_read_cont(port, timelim):
         print("ID: %d, Ans: %c" % (c.id, c.ans))
         stu_ans[c.id] = c.ans
