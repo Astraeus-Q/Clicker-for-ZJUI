@@ -97,6 +97,8 @@ class Ui_Form(object):
 
 
 
+
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     form = QtWidgets.QWidget()

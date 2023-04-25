@@ -97,9 +97,10 @@ class Answer_section(QMainWindow):
         
     
     def end_course(self):
-        # self.course_section = cs.Course_section()
-        # self.course_section.ui.show()
-        # self.ui.hide()
+        global course_ui
+        course_ui = cs.Course_section()
+        course_ui.ui.show()
+        self.ui.hide()
         return
 
         

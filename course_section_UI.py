@@ -36,8 +36,9 @@ class Course_section(QMainWindow):
             # User have to select a course from the list in comboBox.
             QMessageBox.information(self, "Oops", "Please select your course ↖（￣︶￣)>　", QMessageBox.Ok)
         else:
-            self.ans_section = aui.Answer_section(self.ui.comboBox.currentText() + " : " + str(self.ui.spinBox.value()))
-            self.ans_section.ui.show()
+            global ans_ui
+            ans_ui = aui.Answer_section(self.ui.comboBox.currentText() + " : " + str(self.ui.spinBox.value()))
+            ans_ui.ui.show()
             self.ui.hide()
 
 
