@@ -44,7 +44,7 @@ class logindialog(QDialog,Ui_Form):
             hl.update(password.encode(encoding='utf-8'))
 
             #result
-            if result[2]==0:
+            if result[2] != studentId:
                 print(QMessageBox.information(self, "Warning", "Invaild Username!", QMessageBox.Yes))
                 return
             else:
