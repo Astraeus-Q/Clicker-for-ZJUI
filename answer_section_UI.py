@@ -8,11 +8,12 @@ import threading
 import time
 
 import course_section_UI as cs
+import ans_hist_UI as ah
 import Clicker_backend as cbd
 
 
 class Answer_section(QMainWindow):
-    def __init__(self, course_name: str):
+    def __init__(self, course_name: str, user = "Tester"):
         super().__init__()
         self.ui = uic.loadUi('UI/answer_section.ui')
         # Add pictures
@@ -20,19 +21,22 @@ class Answer_section(QMainWindow):
         scared_bar = p_bar.scaled(1080, 180)
         self.ui.label_7.setMaximumSize(8100, 1000)
         self.ui.label_7.setPixmap(scared_bar)
-        self.ui.setWindowTitle(course_name)
+        self.user = user
+        self.ui.setWindowTitle("%s: %s" % (self.user,course_name))
         self.ui.lineEdit.setEchoMode(QLineEdit.Password) # Hide the password digit.
         self.first = 0 # Avoid Repeat USB Initialization
 
         # -----Buttons-----
         # Button: Start
         self.ui.pushButton.clicked.connect(self.start_ans)
-        # Button: End
+        # Button: Interrupt
         self.ui.pushButton_2.clicked.connect(self.end_ans)
          # Button: Extend
         self.ui.pushButton_9.clicked.connect(self.ext_ans)
         # Button: End Course
         self.ui.pushButton_5.clicked.connect(self.end_course)
+        # Button: History
+        self.ui.pushButton_3.clicked.connect(self.history)
 
         # Display
         self.timeLock = threading.Lock()
@@ -48,7 +52,11 @@ class Answer_section(QMainWindow):
         if self.first == 0:
             self.first = 1
             port = "COM5"
-            cbd.USB_init(port)
+            try:
+                cbd.USB_init(port)
+            except:
+                print(QMessageBox.warning(self, "Oops", "Please insert the Clicker Receiver", QMessageBox.Yes))
+                return
         t_lim = self.ui.spinBox.value()*60 + self.ui.spinBox_2.value()
         self.ans_time = float(t_lim)
         cbd.ans_dict = {}
@@ -105,9 +113,15 @@ class Answer_section(QMainWindow):
     
     def end_course(self):
         global course_ui
-        course_ui = cs.Course_section()
+        course_ui = cs.Course_section(self.user)
         course_ui.ui.show()
         self.ui.hide()
+        return
+    
+    def history(self):
+        global hist_ui
+        hist_ui = ah.Ans_history()
+        hist_ui.ui.show()
         return
 
         

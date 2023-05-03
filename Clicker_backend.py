@@ -16,6 +16,9 @@ ANS_LEN = 1 # 'A', 'B', 'C', 'D', 'E'
 DIV_LEN = 3 
 MSG_LEN = ANS_LEN + DIV_LEN + ID_LEN + 2 # "[Ans][3 spaces][ID]\r\n"
 
+# Gloabl Variable
+ans_dict = {}
+running = 1
 class Clicker_resp:
     # Include the ID of Clicker and answer.
     id = 0
@@ -32,8 +35,7 @@ def msg_filter(msg:str)->str:
     else:
         return 0, msg[:(ID_LEN + ANS_LEN)]  
 
-ans_dict = {}
-running = 1
+
 def USB_init(port):
     # Set port value.
     serialPosrt = port

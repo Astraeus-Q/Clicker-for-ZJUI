@@ -6,11 +6,15 @@ from PyQt5.QtGui import QIcon
 import base64
 import configparser
 
+import hashlib
+import json
+
 # Windows
 from login_UI import Ui_Form
 import course_section_UI as cs
 
-import hashlib
+# Global Variable
+login_user = "Tester"
 
 class logindialog(QDialog,Ui_Form):
 
@@ -30,29 +34,32 @@ class logindialog(QDialog,Ui_Form):
         self.pw_edit.returnPressed.connect(self.signInCheck)
 
     def signInCheck(self):
-        studentId = self.user_edit.text()
+        username = self.user_edit.text()
         password = self.pw_edit.text()
-        #print('studentId',studentId, password)
-        if (studentId == "" or password == ""):
+        #print('username',username, password)
+        if (username == "" or password == ""):
             print(QMessageBox.warning(self, "Oops", "Username or Password could not be Empty!", QMessageBox.Yes))
             return
         else:
             # th=tesql()
-            #result = th.select_tb_admin(studentId) # Get passwords from database
-            result=(7, 5, 'admin', 'e10adc3949ba59abbe56e057f20f883e')# Md5 encoding  ：  123456
+            #result = th.select_tb_admin(username) # Get passwords from database
             hl = hashlib.md5()
             hl.update(password.encode(encoding='utf-8'))
+            account_jf = open("JSON_Base/account.json", "r") 
+            account_dict = json.load(account_jf) # Get JSON_DB.
+            account_jf.close()
 
-            #result
-            if result[2] != studentId:
-                print(QMessageBox.information(self, "Warning", "Invaild Username!", QMessageBox.Yes))
+            if username not in account_dict:
+                print(QMessageBox.information(self, "Warning", "Username does not exist!", QMessageBox.Yes))
                 return
             else:
-                if (5 == result[1] and hl.hexdigest() == result[3]):
-                    self.is_student_signal.emit(studentId)
-                elif (5 != result[1] and hl.hexdigest() == result[3]):
-                    print(QMessageBox.information(self, "Warning", "Username Type Error!", QMessageBox.Yes))
-                    return
+                if hl.hexdigest() == account_dict[username]:
+                    self.is_student_signal.emit(username)
+                    global login_user
+                    login_user = username
+                    global course_sec
+                    course_sec = cs.Course_section(login_user)
+                    course_sec.ui.show()
                 else:
                     print(QMessageBox.information(self, "Warning", "Password Error!", QMessageBox.Yes))
                     return
@@ -87,6 +94,7 @@ class logindialog(QDialog,Ui_Form):
         print(self.user_name, self.password)
 
 
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon("UI/emoji.png"))
@@ -94,7 +102,5 @@ if __name__ == "__main__":
 
     dialog = logindialog()
     if dialog.exec_()==QDialog.Accepted:
-        course_sec = cs.Course_section()
-        course_sec.ui.show()
         sys.exit(app.exec_())
 

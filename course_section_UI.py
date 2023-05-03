@@ -9,7 +9,7 @@ import Clicker_UI as cui
 
 class Course_section(QMainWindow):
 
-    def __init__(self):
+    def __init__(self, user="Tester"):
         super().__init__()
         self.ui = uic.loadUi('UI/Course_section.ui')
         # Add pictures
@@ -18,10 +18,10 @@ class Course_section(QMainWindow):
         self.ui.label_5.setMaximumSize(8100, 1800)
         self.ui.label_5.setPixmap(scared_bar)
         p_icon = QPixmap("UI/Earth_wb.jpg")
-        scared_icon = p_icon.scaled(100, 80)
-        self.ui.label.setPixmap(scared_icon)
-
-        self.ui.setWindowTitle("Select Course")
+        scaled_icon = p_icon.scaled(100, 80)
+        self.ui.label.setPixmap(scaled_icon)
+        self.user = user
+        self.ui.setWindowTitle("%s: Select Course" % self.user)
     
         # -----Buttons-----
         # Button: Start Course
@@ -37,7 +37,7 @@ class Course_section(QMainWindow):
             QMessageBox.information(self, "Oops", "Please select your course ↖（￣︶￣)>　", QMessageBox.Ok)
         else:
             global ans_ui
-            ans_ui = aui.Answer_section(self.ui.comboBox.currentText() + " : " + str(self.ui.spinBox.value()))
+            ans_ui = aui.Answer_section(self.ui.comboBox.currentText() + " : " + str(self.ui.spinBox.value()), self.user)
             ans_ui.ui.show()
             self.ui.hide()
 
@@ -46,7 +46,8 @@ class Course_section(QMainWindow):
         self.ui.hide()
         dialog = cui.logindialog()
         if dialog.exec_()==QDialog.Accepted:
-            self.ui.show()
+            #self.ui.show()
+            pass
 
 
 
