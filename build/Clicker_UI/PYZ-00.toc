@@ -881,6 +881,7 @@
   ('alabaster.support',
    'D:\\anaconda\\lib\\site-packages\\alabaster\\support.py',
    'PYMODULE'),
+  ('ans_hist_UI', 'D:\\CS\\Clicker\\Repo\\ans_hist_UI.py', 'PYMODULE'),
   ('answer_section_UI',
    'D:\\CS\\Clicker\\Repo\\answer_section_UI.py',
    'PYMODULE'),

@@ -822,7 +822,7 @@
             <string notr="true">background-color: rgb(233, 233, 233);</string>
            </property>
            <property name="text">
-            <string>End</string>
+            <string>Interrupt</string>
            </property>
           </widget>
          </item>

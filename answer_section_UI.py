@@ -51,7 +51,7 @@ class Answer_section(QMainWindow):
     def start_ans(self):
         if self.first == 0:
             self.first = 1
-            port = "COM5"
+            port = "COM4"
             try:
                 cbd.USB_init(port)
             except:
@@ -118,9 +118,10 @@ class Answer_section(QMainWindow):
         self.ui.hide()
         return
     
+    
     def history(self):
         global hist_ui
-        hist_ui = ah.Ans_history()
+        hist_ui = ah.Ans_history("JSON_Base/admin/ECE_110.json", "1")
         hist_ui.ui.show()
         return
 
