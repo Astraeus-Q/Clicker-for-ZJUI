@@ -38,6 +38,7 @@ class Answer_section(QMainWindow):
         # Button: History
         self.ui.pushButton_3.clicked.connect(self.history)
 
+
         # Display
         self.timeLock = threading.Lock()
         self.ans_time = 0
@@ -121,7 +122,7 @@ class Answer_section(QMainWindow):
     
     def history(self):
         global hist_ui
-        hist_ui = ah.Ans_history("JSON_Base/admin/ECE_110.json", "1")
+        hist_ui = ah.Ans_history("JSON_Base/admin/ECE_110/", 1)
         hist_ui.ui.show()
         return
 
