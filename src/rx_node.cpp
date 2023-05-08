@@ -1,6 +1,7 @@
 #include <SPI.h> // delete LibSpi when compile.
 #include <nRF24L01.h>
 #include <RF24.h>
+#include <Wire.h>
 // not used in final compile.
 
 typedef struct Payload_clicker{
@@ -8,36 +9,41 @@ typedef struct Payload_clicker{
     uint8_t counter;
 }payload;
 
-String* Read_package(payload packet);
+String Read_package(payload packet);
 int8_t unslotted_trans(void* payload ,int8_t id);
 
 RF24 radio(7,8);
 
 uint8_t RadioAddr = 0; // work as the central node.
 
-uint8_t address[][6] = {"1Node","2Node"};
+// TODO: packet structure modification !!!!
+
+uint8_t address[][6] = {"00001","00002"};
 
 bool Rxmode = 1; // working as receiver.
+
+bool sign_in = false;       // default in idle mode.
+bool poll_in = false;
+bool test_   = false;
 
 void setup() {
     Serial.begin(9600);
     while(!Serial){}
 
     if (!radio.begin()){
+        Serial.println(F(" nRF24 not connected! Reboot. "));
         while(1){}
     }
     // radio settings
     radio.setPALevel(RF24_PA_MAX);
-    radio.setPayloadSize(sizeof(payload));
-
-    radio.openReadingPipe(1, address[RadioAddr]);
+//    radio.setPayloadSize(sizeof(payload));
     radio.openWritingPipe(address[!RadioAddr]);
-
-    radio.startListening();
+    radio.openReadingPipe(1, address[RadioAddr]);
 }
 
 
-void loop(){
+void loop()
+{
     uint8_t pipe;
     payload Recv;
     // toy response
@@ -47,58 +53,59 @@ void loop(){
     String sin, first, second;
     char input[20];
     // loop control
-    bool sign_in = false;   // default in idle mode.
-    bool poll_in = false;
 
     if (Serial.available()){
-        delay(100);     // wait for all frames.
-                        // Read from Serial at every loop start.
-             serial_in = Serial.available();
-             if (serial_in != 0){
-                 // read control instruction.
-                 for (int i = 0;i < serial_in; i++){
-                     // note that serial read only one char per frame.
-                     input[i] = Serial.read();
-                 }
+        delay(1000);       // wait for all frames.
+        // Read from Serial at every loop start.
+        serial_in = Serial.available();
+        if (serial_in != 0){
+             // read control instruction.
+             for (int i = 0;i < serial_in; i++){
+                 // note that serial read only one char per frame.
+                 input[i] = Serial.read();
              }
-             // read the settings.
-             // TODO: Assume the setting messages would be like:
-             // Sign-in: |Poll:
-             // Sign|1   |Poll|1
-             // Sign|0   |poll|0
-             sin = String(input);
-             first = sin.substring(0,4);
-             second = sin.substring(5,6);
-             if (first == String("Sign")){
-                 // sign_in option
-                 if (second.toInt()){
-                     // enable
-                     sign_in = true;
-                 }
-                 else{
-                     sign_in = false;
-                 }
+        }
+        // read the settings.
+        // TODO: Assume the setting messages would be like:
+        // Sign-in: |   Poll:
+        // s|1      |   p|1
+        // s|0      |   p|0
+        sin = String(input);
+        first = sin.substring(0, 1);
+        second = sin.substring(2, 3);
+        if (first == String("s")){
+             // sign_in option
+             if (second.toInt()) {
+                 // enable
+                 sign_in = true;
+                 Serial.println(F(" Enter Check-in Mode. "));
+             } else {
+                 sign_in = false;
+                 Serial.println(F(" Exit  Check-in Mode. "));
              }
-             else if (first == String("Poll")){
-                 // poll option
-                 if (second.toInt()){
-                     // enable
-                     poll_in = true;
-                 }
-                 else{
-                     poll_in = false;
-                 }
+        } else if (first == String("p")) {
+             // poll option
+             if (second.toInt()) {
+                 // enable
+                 poll_in = true;
+                 Serial.println(F(" Enter Poll Mode. "));
+             } else {
+                 poll_in = false;
+                 Serial.println(F(" Exit  Poll Mode. "));
              }
+        } else if (first == String("t")) {
+             test_ = true;
+        }
     }
     // enters main loop.
-    if (sign_in){
-        // enters the sign-in loop.
+    if (sign_in == true) {
+
         radio.startListening();
         if (radio.available(&pipe)){
              // read the pipe number and the payload.
              uint8_t payload_size = radio.getPayloadSize();
              radio.read(&Recv, payload_size);
-             String* content = Read_package(Recv);
+             String content = Read_package(Recv);
              // report the sign-in data to database.
              Serial.println(content[0]);
              // reply to the TX clicker.
@@ -124,22 +131,48 @@ void loop(){
         // poll mode do not need response.
         radio.startListening();
         if (radio.available(&pipe)){
-             radio.read(&Recv, sizeof(payload));
-             String* content = Read_package(Recv);
-             Serial.println(Recv.msg);
+//             uint8_t payload_size = radio.getPayloadSize();
+             char raw_content[32] = "";
+             radio.read(&raw_content, 31);
+//             String* content = Read_package(Recv);
+             Serial.println(raw_content);
         }
+        delay(50);
     }
+
+    else if (test_){
+        char answer;
+        Serial.println(F("Input Answer. "));
+        while (!Serial.available()){}
+        answer = Serial.read();
+        radio.stopListening();
+        char ans[8] = "ans:";
+        ans[4] = answer;
+        bool report = radio.write(&ans, sizeof(ans));
+        if (!report){
+             Serial.println(ans);
+            Serial.println(F("Transmission Failed. "));
+        }
+        else {
+            Serial.println(F("Answer Transmitted:"));
+            Serial.println(ans);
+        }
+        radio.txStandBy();
+        test_ = false;
+    }
+
     else {
         // enter sleep mode.
         radio.stopListening();
         radio.txStandBy();
+        delay(100);
     }
 
 }
 
 
 // read the given packet into string list.
-String* Read_package(payload packet){
+String Read_package(payload packet){
     // Assume packet would be like :
     // Sign-in: ID |
     // Answer: ID | Ans |
@@ -147,6 +180,8 @@ String* Read_package(payload packet){
     uint8_t lengh;
     int counts;
     String msg = String(packet.msg);
+
+    lengh = msg.length();
     String content[3];
 
     // Assume the length of ID is here.
@@ -161,86 +196,109 @@ String* Read_package(payload packet){
 
     if (counts == 1){
         // Sign-in packet
-        content[0] = msg.substring(0,4);
+        content[0] = msg.substring(0,ID_size);
     } else if (counts == 2){
         // Answer packet.
-        content[0] = msg.substring(0,4);
-        content[1] = msg.substring(5,6);
+        content[0] = msg.substring(0,ID_size);
+        content[1] = msg.substring(ID_size+1,6);
     }
-    return content;
+    return *content;
 }
 
-int8_t unslotted_trans(void* payload ,int8_t id = -1){
 
+uint8_t enhanced_transmit(RF24 radio, payload* payload1, int8_t id = 0)
+{
+    // define DIFS value here, in # ms.
+    uint8_t DIFS = 10;
+    // test radio status
+    if (radio.isFifo(true, false)){
+        // transmission FIFO is full.
+        // ? maybe we can resend them in this way.
+        radio.reUseTX();
+        return -1;
+    }
+    // transmission detection.
     uint8_t count_down = 0;
-    int8_t col_count = 0;
-    const uint8_t max_col = 10;
-    const uint8_t win_size = 7;
+    uint8_t BE = 0;
+    uint8_t col_count = 0;
+    uint8_t window_size = 0;
+
+    const uint8_t max_retry = 10;
+    const uint8_t max_win_size = 7;
     uint8_t window[7] = {1,7,15,31,63,127,255};
 
-    bool approve = false;
-    bool success = false;
+    bool CCAtest = false;
+    bool loop_count = false;
+
+    randomSeed(id);
 
     radio.flush_tx();
     radio.startListening();
 
-    // First Transmission Trial.
-    if (!radio.testRPD()){
-        delayMicroseconds(CCA);
-        if (!radio.testRPD()){
-            approve = true;
-        } else {
-            // collision in CCA window. Maybe useful in further enhancement.
-        }
-    }
-    // First trial failed. Add a backoff window.
-    if (!approve){
-        if (id != -1){
-            srand(id);
-        }else{
-            srand(rand());
-        }
-        col_count ++;
-        count_down = rand()%(window[col_count]);
-    }
 
-    // Loop Trial until success or max count
-    while(!success || col_count >= max_col){
-        if (!approve){
-            delayMicroseconds(DIFS);
+    while (col_count >= max_retry){
+        if (count_down > 0){
+            // countdown according to the CCA rules.
             if (!radio.testRPD()){
-                 delayMicroseconds(CCA);
-                 if (!radio.testRPD()){
-                     count_down--;
+                 count_down --;
+            }
+        } else {
+            // perform CCA to detect the channel.
+            delay(DIFS);
+            if (!radio.testRPD()){
+                 // CCA test passed.
+                 CCAtest = true;
+            } else{
+                 // check the window type.
+                 if (loop_count){
+                     loop_count = false;
+                     col_count ++;
+                     if (col_count >  max_win_size){
+                         window_size = max_win_size;
+                     } else {
+                         window_size = col_count;
+                     }
+                     // BE counts to zero. reassign values.
+                     BE = floor(window[window_size] * random(5,9)/10);
+                     count_down = random(0,window[window_size] - BE);
+                 }
+                 else {
+                     loop_count = true;
+                     // counts to BE.
+                     count_down = random(0,BE);
                  }
             }
         }
-        // count down drop to zero.
-        if (!count_down){
+
+        if (CCAtest){
+            // transmit the packages.
             radio.stopListening();
-            bool report = radio.write(&payload, sizeof(clickerload));
+            bool report = radio.write(&payload1, sizeof(payload1));
             if (report){
-                 success = true;
-            }else{
-                 // Timeout happened. collision.
+                 return 0;
+            }
+            else{
+                 CCAtest = false;
+                 // transmission failed.
+                 // DEBUG USAGE
+                 Serial.println(F(" Trans Failed. "));
+
+                 loop_count = false;
                  col_count ++;
-                 if (col_count < win_size){
-                     count_down = rand()%window[col_count];
+                 if (col_count >  max_win_size){
+                     col_count = max_win_size;
                  } else{
-                     count_down = rand()%window[win_size];
+                     window_size = col_count;
                  }
-                 success = false;
-                 approve = false;
-                 radio.reUseTX();
+                 BE = floor(window[window_size] * random(5,9)/10);
+                 count_down = random(0,window[window_size] - BE);
                  radio.startListening();
             }
         }
-    }
-    // finalize transmission.
-    radio.txStandBy();
-    if (success) {
-        return col_count;
-    } else{
-        return -1;
+
+        if (col_count > max_retry){
+            // transmission failed.
+            return -1;
+        }
     }
 }
