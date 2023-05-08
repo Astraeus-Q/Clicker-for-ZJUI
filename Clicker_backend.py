@@ -11,6 +11,8 @@ import numpy as np
 import random
 import threading
 
+import Clicker_DB_manager as dbm
+
 ID_LEN = 7 # ID of Clicker is a 4-digit number. Like"1234".
 ANS_LEN = 1 # 'A', 'B', 'C', 'D', 'E'
 DIV_LEN = 3 
@@ -123,7 +125,7 @@ def plot_answer(stu_ans:dict, correct):
 
     options = ['A', 'B', 'C', 'D', 'E']
     ans = list(stu_ans.values())
-    num = [ans.count(ord(x)) for x in options]
+    num = [ans.count(ord(x)) for x in options] # ord() returns ASCII value.
 
     r_g = ["green" if op == correct else "red" for op in options] # Right answer is "green" and wrong answer is "red".
 
@@ -162,6 +164,26 @@ def collect_ans(timelim):
     print("Response:")
 
     return stu_ans
+
+def update_JSONDB_ans(course_path, class_idx: int, ques_idx: str, correct_ans, point: str, ans_time):
+    c_db_path = course_path + ("%d.json" % class_idx)
+    dict_a = dbm.read_DB(c_db_path)
+    s_db_path = course_path + "student.json"
+    dict_s = dbm.read_DB(s_db_path)
+
+    global ans_dict
+    num_total_ans = 0
+    num_correct_ans = 0
+    for id in ans_dict:
+        stu_name = dict_s[str(id)]
+        dict_a["Student"][stu_name][ques_idx] = chr(ans_dict[id])
+        num_total_ans += 1
+        if chr(ans_dict[id]) == correct_ans:
+            num_correct_ans += 1
+    dict_a["Question"][ques_idx] = [correct_ans, num_total_ans, num_correct_ans, point, ans_time]
+    dbm.write_DB(c_db_path, dict_a)
+    return
+
 
 if __name__ == '__main__':
     stu_ans = collect_ans(20)
