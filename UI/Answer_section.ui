@@ -248,7 +248,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Question:</string>
+        <string>Question: </string>
        </property>
       </widget>
      </item>
@@ -280,6 +280,9 @@
        </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(250, 250, 250);</string>
+       </property>
+       <property name="value">
+        <number>1</number>
        </property>
       </widget>
      </item>
@@ -315,7 +318,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Correct Answer:</string>
+        <string>Correct Answer: </string>
        </property>
       </widget>
      </item>
@@ -379,7 +382,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Worth Point:</string>
+        <string>Worth Point: </string>
        </property>
       </widget>
      </item>
@@ -411,6 +414,9 @@
        </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(250, 250, 250);</string>
+       </property>
+       <property name="value">
+        <number>1</number>
        </property>
       </widget>
      </item>
@@ -578,6 +584,9 @@
        </property>
        <property name="maximum">
         <number>999</number>
+       </property>
+       <property name="value">
+        <number>20</number>
        </property>
       </widget>
      </item>
@@ -822,7 +831,7 @@
             <string notr="true">background-color: rgb(233, 233, 233);</string>
            </property>
            <property name="text">
-            <string>Interrupt</string>
+            <string>Abort</string>
            </property>
           </widget>
          </item>

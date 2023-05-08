@@ -49,6 +49,7 @@ class Ui_Form(object):
         self.login_btn.setFont(font_16)
         self.login_btn.setText("Login")
         self.login_btn.setObjectName("login_btn")
+        self.login_btn.setCursor(QtCore.Qt.PointingHandCursor)
         self.login_btn.setStyleSheet("#login_btn{background-color:#2c7adf;color:#fff;border:none;border-radius:4px;}")
 
         # User label

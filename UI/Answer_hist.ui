@@ -420,6 +420,9 @@
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(230, 60, 20);</string>
+         </property>
          <property name="text">
           <string>Remove</string>
          </property>
@@ -671,6 +674,9 @@
          </property>
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(230, 60, 20);</string>
          </property>
          <property name="text">
           <string>Remove ☑️</string>

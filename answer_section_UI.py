@@ -8,12 +8,12 @@ import threading
 import time
 
 import course_section_UI as cs
-import ans_hist_UI as ah
+import answer_hist_UI as ah
 import Clicker_backend as cbd
 
 
 class Answer_section(QMainWindow):
-    def __init__(self, course_name: str, user = "Tester"):
+    def __init__(self, course_name: str, course_idx: int, user = "admin"):
         super().__init__()
         self.ui = uic.loadUi('UI/answer_section.ui')
         # Add pictures
@@ -21,7 +21,11 @@ class Answer_section(QMainWindow):
         scared_bar = p_bar.scaled(1080, 180)
         self.ui.label_7.setMaximumSize(8100, 1000)
         self.ui.label_7.setPixmap(scared_bar)
+
+        self.course_name = course_name
+        self.course_idx = course_idx
         self.user = user
+        
         self.ui.setWindowTitle("%s: %s" % (self.user,course_name))
         self.ui.lineEdit.setEchoMode(QLineEdit.Password) # Hide the password digit.
         self.first = 0 # Avoid Repeat USB Initialization
@@ -51,18 +55,22 @@ class Answer_section(QMainWindow):
 
     def start_ans(self):
         if self.first == 0:
-            self.first = 1
             port = "COM4"
             try:
                 cbd.USB_init(port)
+                self.first = 1
             except:
                 print(QMessageBox.warning(self, "Oops", "Please insert the Clicker Receiver", QMessageBox.Yes))
+                self.first = 0
                 return
-        t_lim = self.ui.spinBox.value()*60 + self.ui.spinBox_2.value()
-        self.ans_time = float(t_lim)
+        self.t_lim = self.ui.spinBox.value()*60 + self.ui.spinBox_2.value()
+        self.ans_time = float(self.t_lim)
         cbd.ans_dict = {}
         cbd.running = 1
         self.correct = self.ui.lineEdit.text()
+        self.ques_idx = str(self.ui.spinBox_4.value())
+        self.point = str(self.ui.spinBox_3.value())
+
         if self.correct in ['A', 'B', 'C', 'D']:
             self.t_display.start()
         else:
@@ -84,6 +92,8 @@ class Answer_section(QMainWindow):
             self.ui.lcdNumber.setStyleSheet("color: black")
             cbd.running = 0
             self.plotting()
+            db_path = "JSON_Base/%s/%s/" % (self.user, self.course_name) 
+            cbd.update_JSONDB_ans(db_path, self.course_idx, self.ques_idx, self.correct, self.point, self.t_lim) # TODO
             self.t_display.stop()
         self.timeLock.release()
         return
@@ -140,6 +150,6 @@ def t2s(t: int):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = Answer_section("TEST")
+    window = Answer_section("ECE_110", 1)
     window.ui.show()
     sys.exit(app.exec_())

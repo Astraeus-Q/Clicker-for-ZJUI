@@ -4,16 +4,19 @@ from PyQt5.QtCore import Qt
 from PyQt5 import uic
 
 import sys
+import os
 import json
 import matplotlib.pyplot as plt
 import re
+
+import Clicker_DB_manager as dbm
 
 
 
 class Detail_history(QMainWindow):
     def __init__(self, course_path, class_idx, ques_list:list):
         super().__init__()
-        self.ui = uic.loadUi('UI/Ans_detail_hist.ui')
+        self.ui = uic.loadUi('UI/Answer_detail_hist.ui')
 
         self.ui.setWindowTitle("Question Detail")
         table = self.ui.tableWidget
@@ -22,14 +25,13 @@ class Detail_history(QMainWindow):
         self.course_path = course_path
         self.class_idx = class_idx
         db_path = self.course_path + ("%d.json" % self.class_idx)
-        jf_a = open(db_path, "r+") # Open JSON database.
-        dict_a = json.load(jf_a)
+        dict_a = dbm.read_DB(db_path) # Open JSON database.
 
-        dict_ques = dict_a["Question"] # Question Record
-        dict_stud = dict_a["Student"] # Student Record
+        self.dict_ques = dict_a["Question"] # Question Record
+        self.dict_stud = dict_a["Student"] # Student Record
         q_list = sorted(ques_list)
         q_num = len(q_list)
-        s_list = sorted(dict_stud.keys())
+        s_list = sorted(self.dict_stud.keys())
         s_num = len(s_list)
         table.setRowCount(s_num) # Row header is student name.
         table.setColumnCount(q_num + 1) # Column header is question+answer. +1 is for total points.
@@ -39,14 +41,33 @@ class Detail_history(QMainWindow):
         self.ui.resize(width_fit, heigh_fit) # The size of the table is fit to the amount of data.
 
         for ri in range(table.rowCount()):
-            rhead_item = QTableWidgetItem(s_list[ri]) # Student name.
+            stud_name = s_list[ri] # Student name.
+            rhead_item = QTableWidgetItem(stud_name) 
             table.setVerticalHeaderItem(ri, rhead_item)
+            total_point = 0 # The sum of the points that the student got in this class.
             for ci in range(table.columnCount()):
-                if ci != table.columnCount() - 1:
-                    chead_item = QTableWidgetItem("Question%s [%s]" % (q_list[ci], dict_ques[q_list[ci]][0])) # e.g. Question [A]
-                else:
+                if ci == table.columnCount() - 1:
                     # Last Column
                     chead_item = QTableWidgetItem("Total Points")
+                    newItem = QTableWidgetItem(str(total_point))
+                    table.setItem(ri, ci, newItem)
+                    table.item(ri,ci).setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter) # Centralize
+                else:
+                    ques_idx = q_list[ci]
+                    chead_item = QTableWidgetItem("Question%s [%s]" % (ques_idx, self.dict_ques[q_list[ci]][0])) # e.g. Question [A]
+                    if ques_idx in self.dict_stud[stud_name]:
+                        # This student has answered the question.
+                        stud_ans = self.dict_stud[stud_name][ques_idx]
+                        point = self.dict_ques[ques_idx][3] if stud_ans == self.dict_ques[ques_idx][0] else str(0)
+                        newItem = QTableWidgetItem("%s  [%s]" % (point, stud_ans))
+                        total_point += int(point)
+                        table.setItem(ri, ci, newItem)
+                        table.item(ri,ci).setTextAlignment(Qt.AlignHCenter | Qt.AlignVCenter) # Centralize
+                    else:
+                        newItem = QTableWidgetItem("")
+                        table.setItem(ri, ci, newItem)
+                        
+
 
                 table.setHorizontalHeaderItem(ci, chead_item)
         
@@ -60,14 +81,41 @@ class Detail_history(QMainWindow):
         if Item == None or Item.column() == table.columnCount() - 1:
             print("None")
             return
+
         chead = table.horizontalHeaderItem(Item.column()).text()
+        # Just two ways to apply regular expression.
         ques_idx = re.search("\d+\.?\d*", chead).group(0)
-        img = plt.imread(self.course_path + "%s-%s.png" % (self.class_idx, ques_idx))
-        plt.imshow(img)
-        plt.axis('off')
+        correct = re.findall("[\[](.*?)[\]]", chead)[0]
+
+        plt.figure()
+        plt.title("Correct Answers: " + correct)
+        plt.xlabel("%s-%s" % (self.class_idx, ques_idx))
+        plt.ylabel("Number")
+
+        options = ['A', 'B', 'C', 'D', 'E']
+        ans = []
+        for studi in self.dict_stud:
+            if ques_idx in self.dict_stud[studi]:
+                ans.append(self.dict_stud[studi][ques_idx])
+
+        num = [ans.count(x) for x in options]
+
+        r_g = ["green" if op == correct else "red" for op in options] # Right answer is "green" and wrong answer is "red".
+
+
+        plt.bar(options, num, color = r_g)
+
+        for x,y in zip(options, num):   
+            plt.text(x, y, '%d'%y, ha='center', va='bottom', fontsize=7)
         plt.show()
 
-
+        # try:
+        #     img = plt.imread(self.course_path + "%s-%s.png" % (self.class_idx, ques_idx))
+        #     plt.imshow(img)
+        #     plt.axis('off')
+        #     plt.show()
+        # except:
+        #     print(QMessageBox.warning(self, "Oops", "The chart has been deleted!", QMessageBox.Yes))
             
 
 
@@ -80,7 +128,7 @@ class Ans_history(QMainWindow):
 
     def __init__(self, course_path, class_idx):
         super().__init__()
-        self.ui = uic.loadUi('UI/Ans_hist.ui')
+        self.ui = uic.loadUi('UI/Answer_hist.ui')
 
         self.ui.setWindowTitle("Question History")
 
@@ -101,17 +149,17 @@ class Ans_history(QMainWindow):
         self.ui.pushButton_5.clicked.connect(self.remove_selected)
         # Button: Detail
         self.ui.pushButton_2.clicked.connect(self.detail)
+        # Button: Detail Selected
+        self.ui.pushButton_6.clicked.connect(self.detail_selected)
         # -----Table DoubleClick-----
         self.ui.tableWidget.itemDoubleClicked.connect(self.detail_clicked)
 
 
     def open_JSONDB(self):
         self.modified = 0 # Whether the database is modified.
-        self.jf_a = open(self.db_path, "r+") # Open JSON database.
-        self.dict_a = json.load(self.jf_a)
+        self.dict_a = dbm.read_DB(self.db_path) # Open JSON database.
         self.dict_ques = self.dict_a["Question"] # Question Record
         self.dict_stud = self.dict_a["Student"] # Student Record
-        self.jf_a.close()
         return
         
 
@@ -153,9 +201,9 @@ class Ans_history(QMainWindow):
             table.item(i,0).setCheckState(Qt.Unchecked)
         return
 
-    def remove_one_record(self, question_idx):
+    def remove_one_record(self, ques_idx):
         # Remove the quesion in question record.
-        state = self.dict_ques.pop(question_idx, -1)
+        state = self.dict_ques.pop(ques_idx, -1)
         if state == -1:
             print(QMessageBox.warning(self, "Oops", "No such question", QMessageBox.Yes))
             return
@@ -163,36 +211,43 @@ class Ans_history(QMainWindow):
 
         # Remove the question in student record.
         for di in self.dict_stud.values():
-            di.pop(question_idx, -1)
+            di.pop(ques_idx, -1)
+
+        # Delete the statistics chart
+        # pic_path = self.course_path + "%s-%s.png" % (self.class_idx, ques_idx)
+        # if(os.path.isfile(pic_path)):
+        #     os.remove(pic_path)
+        # else:
+        #     print("ERROR!!! No such file.")
         return
     
     def remove(self):
         ques_idx = str(self.ui.spinBox.value())
-        self.remove_one_record(ques_idx)
-        self.update_jf_a()
-        self.fill_table()
+        if QMessageBox.Yes == QMessageBox.warning(self, "Confirmation", "Are you sure about removing question%s?" % ques_idx, QMessageBox.Yes, QMessageBox.No):
+            self.remove_one_record(ques_idx)
+            self.update_jf_a()
+            self.fill_table()
         return
 
     def remove_selected(self):
         table = self.ui.tableWidget
         modified = 0
-        for i in range(table.rowCount()):
-            if table.item(i,0).checkState() == Qt.Checked:
-                ques_idx = table.item(i,0).text()
-                modified = 1
-                self.remove_one_record(ques_idx)
-        
-        if modified == 1:
-            self.dict_a["Question"] = self.dict_ques
-            self.update_jf_a()
-            self.fill_table()
+        if QMessageBox.Yes == QMessageBox.warning(self, "Confirmation", "Are you sure about removing questions selected?", QMessageBox.Yes, QMessageBox.No):
+            for i in range(table.rowCount()):
+                if table.item(i,0).checkState() == Qt.Checked:
+                    ques_idx = table.item(i,0).text()
+                    modified = 1
+                    self.remove_one_record(ques_idx)
+            
+            if modified == 1:
+                self.dict_a["Question"] = self.dict_ques
+                self.update_jf_a()
+                self.fill_table()
         return
 
 
     def update_jf_a(self):
-        self.jf_a = open(self.db_path, "w+")
-        json.dump(self.dict_a, self.jf_a, indent=4)
-        self.jf_a.close()
+        dbm.write_DB(self.db_path, self.dict_a)
         return
 
 
@@ -209,6 +264,18 @@ class Ans_history(QMainWindow):
             return
         global detail
         ques_list = [self.ui.tableWidget.item(Item.row(),0).text()]
+        detail = Detail_history(self.course_path, self.class_idx, ques_list)
+        detail.ui.show()
+
+    def detail_selected(self):
+        table = self.ui.tableWidget
+        ques_list = []
+        for i in range(table.rowCount()):
+            if table.item(i,0).checkState() == Qt.Checked:
+                ques_idx = table.item(i,0).text()
+                ques_list.append(ques_idx)
+                global detail
+        global detail
         detail = Detail_history(self.course_path, self.class_idx, ques_list)
         detail.ui.show()
 
