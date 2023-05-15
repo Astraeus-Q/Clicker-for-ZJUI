@@ -10,10 +10,11 @@ import time
 import course_section_UI as cs
 import answer_hist_UI as ah
 import Clicker_backend as cbd
+import Clicker_DB_manager as dbm
 
 
 class Answer_section(QMainWindow):
-    def __init__(self, course_name: str, course_idx: int, user = "admin"):
+    def __init__(self, course_name: str, course_idx: str, user = "admin"):
         super().__init__()
         self.ui = uic.loadUi('UI/answer_section.ui')
         # Add pictures
@@ -29,6 +30,10 @@ class Answer_section(QMainWindow):
         self.ui.setWindowTitle("%s: %s" % (self.user,course_name))
         self.ui.lineEdit.setEchoMode(QLineEdit.Password) # Hide the password digit.
         self.first = 0 # Avoid Repeat USB Initialization
+
+        self.course_path = "JSON_Base/%s/%s/" % (self.user, self.course_name)
+        self.a_db_path = self.course_path + ("%s.json" % self.course_idx)
+        self.update_question_idx()
 
         # -----Buttons-----
         # Button: Start
@@ -52,6 +57,12 @@ class Answer_section(QMainWindow):
         self.ui.lcdNumber.display("00:00")
         self.ui.progressBar.setValue(0)
 
+    def update_question_idx(self):
+        self.dict_a = dbm.read_DB(self.a_db_path)
+        course_idx = 1
+        for i in self.dict_a["Question"]:
+            course_idx = max(course_idx, int(i)+1)
+        self.ui.spinBox_4.setValue(course_idx)
 
     def start_ans(self):
         if self.first == 0:
@@ -60,7 +71,7 @@ class Answer_section(QMainWindow):
                 cbd.USB_init(port)
                 self.first = 1
             except:
-                print(QMessageBox.warning(self, "Oops", "Please insert the Clicker Receiver", QMessageBox.Yes))
+                print(QMessageBox.warning(self, "Oops", "Please insert the Clicker Receiver.", QMessageBox.Yes))
                 self.first = 0
                 return
         self.t_lim = self.ui.spinBox.value()*60 + self.ui.spinBox_2.value()
@@ -70,11 +81,18 @@ class Answer_section(QMainWindow):
         self.correct = self.ui.lineEdit.text()
         self.ques_idx = str(self.ui.spinBox_4.value())
         self.point = str(self.ui.spinBox_3.value())
+        
+        self.dict_a = dbm.read_DB(self.a_db_path)
+        if self.ques_idx in self.dict_a["Question"]:
+            # Question exists.
+            if QMessageBox.Yes != QMessageBox.information(self, "Confirmation", "This question exists. Continue to start?\n(Record will be covered!)", QMessageBox.Yes, QMessageBox.Cancel):
+                return
+            
 
         if self.correct in ['A', 'B', 'C', 'D']:
             self.t_display.start()
         else:
-            print(QMessageBox.warning(self, "Oops", "Please Choose a Correct Answer form A, B, C or D", QMessageBox.Yes))
+            print(QMessageBox.warning(self, "Oops", "Please Choose a Correct Answer form A, B, C or D.", QMessageBox.Yes))
 
     def refresh_and_collect(self):
         # Update time display.
@@ -92,8 +110,8 @@ class Answer_section(QMainWindow):
             self.ui.lcdNumber.setStyleSheet("color: black")
             cbd.running = 0
             self.plotting()
-            db_path = "JSON_Base/%s/%s/" % (self.user, self.course_name) 
-            cbd.update_JSONDB_ans(db_path, self.course_idx, self.ques_idx, self.correct, self.point, self.t_lim) # TODO
+            cbd.update_JSONDB_ans(self.course_path, self.course_idx, self.ques_idx, self.correct, self.point, self.t_lim) # TODO
+            self.update_question_idx()
             self.t_display.stop()
         self.timeLock.release()
         return
@@ -132,7 +150,7 @@ class Answer_section(QMainWindow):
     
     def history(self):
         global hist_ui
-        hist_ui = ah.Ans_history("JSON_Base/admin/ECE_110/", 1)
+        hist_ui = ah.Ans_history("JSON_Base/%s/%s/" % (self.user, self.course_name), 1)
         hist_ui.ui.show()
         return
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1500</width>
-    <height>1200</height>
+    <height>1300</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,6 +39,18 @@
      </attribute>
      <attribute name="horizontalHeaderCascadingSectionResizes">
       <bool>false</bool>
+     </attribute>
+     <attribute name="horizontalHeaderMinimumSectionSize">
+      <number>40</number>
+     </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>200</number>
+     </attribute>
+     <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
@@ -148,7 +160,7 @@
      </item>
      <item row="0" column="5">
       <property name="text">
-       <string>Default Topic</string>
+       <string>Default Topic!!!!!!!!!!!!!!!!!!!!!!!!!!1</string>
       </property>
      </item>
      <item row="1" column="0">

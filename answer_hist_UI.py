@@ -158,14 +158,14 @@ class Ans_history(QMainWindow):
     def open_JSONDB(self):
         self.modified = 0 # Whether the database is modified.
         self.dict_a = dbm.read_DB(self.db_path) # Open JSON database.
-        self.dict_ques = self.dict_a["Question"] # Question Record
-        self.dict_stud = self.dict_a["Student"] # Student Record
+        if self.dict_a:
+            self.dict_ques = self.dict_a["Question"] # Question Record
+            self.dict_stud = self.dict_a["Student"] # Student Record
         return
         
 
     def create_table(self):
-        table = self.ui.tableWidget
-        table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch) # The size of table will fix to the window.
+        self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch) # The size of table will fix to the window.
         self.fill_table()
         return
 
@@ -201,11 +201,11 @@ class Ans_history(QMainWindow):
             table.item(i,0).setCheckState(Qt.Unchecked)
         return
 
-    def remove_one_record(self, ques_idx):
+    def remove_one_record(self, ques_idx: str):
         # Remove the quesion in question record.
         state = self.dict_ques.pop(ques_idx, -1)
         if state == -1:
-            print(QMessageBox.warning(self, "Oops", "No such question", QMessageBox.Yes))
+            print(QMessageBox.warning(self, "Oops", "No such question.", QMessageBox.Yes))
             return
         self.dict_a["Question"] = self.dict_ques
 
@@ -215,7 +215,7 @@ class Ans_history(QMainWindow):
 
         # Delete the statistics chart
         # pic_path = self.course_path + "%s-%s.png" % (self.class_idx, ques_idx)
-        # if(os.path.isfile(pic_path)):
+        # if os.path.isfile(pic_path):
         #     os.remove(pic_path)
         # else:
         #     print("ERROR!!! No such file.")
@@ -240,7 +240,6 @@ class Ans_history(QMainWindow):
                     self.remove_one_record(ques_idx)
             
             if modified == 1:
-                self.dict_a["Question"] = self.dict_ques
                 self.update_jf_a()
                 self.fill_table()
         return
