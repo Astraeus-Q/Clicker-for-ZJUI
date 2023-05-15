@@ -14,7 +14,7 @@ import Clicker_DB_manager as dbm
 
 
 class Detail_history(QMainWindow):
-    def __init__(self, course_path, class_idx, ques_list:list):
+    def __init__(self, course_path, class_idx: str, ques_list: list):
         super().__init__()
         self.ui = uic.loadUi('UI/Answer_detail_hist.ui')
 
@@ -24,7 +24,7 @@ class Detail_history(QMainWindow):
         # Load answer section Json database.
         self.course_path = course_path
         self.class_idx = class_idx
-        db_path = self.course_path + ("%d.json" % self.class_idx)
+        db_path = self.course_path + ("%s.json" % self.class_idx)
         dict_a = dbm.read_DB(db_path) # Open JSON database.
 
         self.dict_ques = dict_a["Question"] # Question Record
@@ -126,7 +126,7 @@ class Detail_history(QMainWindow):
 
 class Ans_history(QMainWindow):
 
-    def __init__(self, course_path, class_idx):
+    def __init__(self, course_path, class_idx: str):
         super().__init__()
         self.ui = uic.loadUi('UI/Answer_hist.ui')
 
@@ -134,7 +134,7 @@ class Ans_history(QMainWindow):
 
         self.course_path = course_path
         self.class_idx = class_idx
-        self.db_path = course_path + ("%d.json" % self.class_idx)
+        self.db_path = course_path + ("%s.json" % self.class_idx)
         self.open_JSONDB()
         self.create_table()
 

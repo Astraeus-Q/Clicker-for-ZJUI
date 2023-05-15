@@ -3,17 +3,12 @@
         "1": [
             "2023-5-15",
             "Default Topic"
-        ]
-    },
-    "CS_240": {
-        "1": [
-            "2023-5-15",
-            "Default Topic"
         ],
         "2": [
             "2023-5-15",
             "Default Topic"
         ]
     },
+    "CS_240": {},
     "Test Clicker": {}
 }

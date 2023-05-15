@@ -106,6 +106,7 @@ class Course_section(QMainWindow):
             # User have to select a course from the list in comboBox.
             QMessageBox.information(self, "Oops", "Please select your course ↖（￣︶￣)>　", QMessageBox.Ok)
             return  
+        #if self.
         hist_u = ch.Course_history(user_path, self.ui.comboBox.currentText())
         hist_u.ui.show()
 

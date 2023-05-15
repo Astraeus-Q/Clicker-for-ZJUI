@@ -6,11 +6,13 @@ from PyQt5 import uic
 import sys
 import threading
 import time
+import matplotlib.pyplot as plt
 
 import course_section_UI as cs
 import answer_hist_UI as ah
 import Clicker_backend as cbd
 import Clicker_DB_manager as dbm
+import help
 
 
 class Answer_section(QMainWindow):
@@ -40,12 +42,18 @@ class Answer_section(QMainWindow):
         self.ui.pushButton.clicked.connect(self.start_ans)
         # Button: Interrupt
         self.ui.pushButton_2.clicked.connect(self.end_ans)
-         # Button: Extend
+        # Button: Extend
         self.ui.pushButton_9.clicked.connect(self.ext_ans)
-        # Button: End Course
-        self.ui.pushButton_5.clicked.connect(self.end_course)
+        # Button: Result
+        self.ui.pushButton_4.clicked.connect(self.detail)
         # Button: History
         self.ui.pushButton_3.clicked.connect(self.history)
+        # Button: Attandance
+        self.ui.pushButton_6.clicked.connect(self.attendance)
+        # Button: Help
+        self.ui.pushButton_8.clicked.connect(self.help)
+        # Button: End Course
+        self.ui.pushButton_5.clicked.connect(self.end_course)
 
 
         # Display
@@ -75,6 +83,10 @@ class Answer_section(QMainWindow):
                 self.first = 0
                 return
         self.t_lim = self.ui.spinBox.value()*60 + self.ui.spinBox_2.value()
+        if self.t_lim > 99 * 60 + 59:
+            # Maximum time
+            print(QMessageBox.warning(self, "Oops", "Error: Time Overflow!!!", QMessageBox.Yes))
+            return
         self.ans_time = float(self.t_lim)
         cbd.ans_dict = {}
         cbd.running = 1
@@ -131,37 +143,62 @@ class Answer_section(QMainWindow):
     def ext_ans(self):
         self.timeLock.acquire()
         t_add = self.ui.timeEdit_2.time().minute()*60 + self.ui.timeEdit_2.time().second()
+        self.t_lim += t_add
         if t_add > 0:
-            t_add += 1
+            t_add += 1 # For correct LCDnumber display.
         self.ans_time += t_add
         if self.ans_time >= 10:
             self.ui.lcdNumber.setStyleSheet("color: black")
         self.timeLock.release()
         return
         
+    def attendance(self):
+        dict_s = dbm.read_DB(self.course_path+"%s.json"%self.course_idx)["Student"]
+        tot_stu = 0
+        att_stu = 0
+        for si in dict_s:
+            tot_stu += 1
+            if dict_s[si]:
+                att_stu += 1
+        plt.figure()
+        y = [att_stu, tot_stu-att_stu]
+        plt.pie(y, labels = ["Present", "Absent"], autopct='%d')
+        plt.title("Attendance: %.2f%%" % (100*y[0]/(y[1]+y[0])))
+        plt.show()
+        
+
     
+    def detail(self):
+        global detail
+        dict_q = dbm.read_DB(self.a_db_path)["Question"]
+        ques_idx = str(self.ui.spinBox_4.value())
+        if ques_idx in dict_q:
+            detail = ah.Detail_history(self.course_path, self.course_idx, [ques_idx])
+            detail.ui.show()
+        else:
+            print(QMessageBox.information(self, "Oops", "The question has not been answered.", QMessageBox.Yes))
+        return
+    
+    def history(self):
+        global hist_ui
+        hist_ui = ah.Ans_history("JSON_Base/%s/%s/" % (self.user, self.course_name), self.course_idx)
+        hist_ui.ui.show()
+        return
+
+    def help(self):
+        global help_ui
+        help_ui = help.Help()
+        help_ui.ui.show()
+
     def end_course(self):
         global course_ui
         course_ui = cs.Course_section(self.user)
         course_ui.ui.show()
         self.ui.hide()
         return
-    
-    
-    def history(self):
-        global hist_ui
-        hist_ui = ah.Ans_history("JSON_Base/%s/%s/" % (self.user, self.course_name), 1)
-        hist_ui.ui.show()
-        return
-
-        
 
 def t2s(t: int):
     # Transfer the number of second to a formated string "mm:ss".
-    if t > 99 * 60 + 999:
-        # Maximum time
-        print("Error: Time Overflow!!!")
-        return "00:00"
     return (f"{int(t/60):0>2}:{int(t%60):0>2}")
         
 
