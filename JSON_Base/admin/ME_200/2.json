@@ -1,0 +1,21 @@
+{
+    "Question": {
+        "1": [
+            "D",
+            2,
+            0,
+            "1",
+            20
+        ]
+    },
+    "Student": {
+        "Zhou Qishen": {},
+        "Qiu Yue": {},
+        "Li Bowen": {
+            "1": "C"
+        },
+        "Xie Mu": {
+            "1": "A"
+        }
+    }
+}

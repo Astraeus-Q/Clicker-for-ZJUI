@@ -327,7 +327,7 @@ class remote_db():
                 answer_char += ans
                 answer_char += ","
                 if (qs[num][0] == ans):
-                    total_score += qs[num][3]
+                    total_score += int(qs[num][3])
 
             # record the data into the grades.
             try :

@@ -3,6 +3,18 @@
         "1": [
             "2023-5-18",
             "Chapter 1"
+        ],
+        "2": [
+            "2023-5-18",
+            "Cloud Computing"
+        ],
+        "3": [
+            "2023-5-18",
+            "Default Topic"
+        ],
+        "4": [
+            "2023-5-18",
+            "Default Topic"
         ]
     },
     "ECE_110": {
@@ -23,5 +35,14 @@
             "Default Topic"
         ]
     },
-    "Test_Clicker_R": {}
+    "Test_Clicker_R": {
+        "1": [
+            "2023-5-18",
+            "Vote"
+        ],
+        "2": [
+            "2023-5-18",
+            "Default Topic"
+        ]
+    }
 }

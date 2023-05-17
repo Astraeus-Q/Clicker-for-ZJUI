@@ -8,6 +8,7 @@ class Plot_win(QMainWindow):
     def __init__(self, picture_name, picture_path):
         super().__init__()
         self.ui = uic.loadUi('UI/plot.ui')
+        #self.ui.setFixedSize(self.ui.width(), self.ui.height()) # Fixed
         self.ui.setWindowTitle(picture_name)
         picture = QPixmap(picture_path)
         self.ui.label.setPixmap(picture)

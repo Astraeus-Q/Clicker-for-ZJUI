@@ -130,7 +130,12 @@ def plot_answer(stu_ans:dict, correct, pic_path):
     ans = list(stu_ans.values())
     num = [ans.count(ord(x)) for x in options] # ord() returns ASCII value.
 
-    r_g = ["green" if op == correct else "red" for op in options] # Right answer is "green" and wrong answer is "red".
+    if correct == 'V':
+        plt.title("Vote")
+        r_g = ["green" for op in options]
+    else:
+        plt.title("Correct Answers: " + correct)
+        r_g = ["green" if op == correct else "red" for op in options] # Right answer is "green" and wrong answer is "red".
 
 
     plt.bar(options, num, color = r_g)
@@ -183,7 +188,7 @@ def update_JSONDB_ans(course_path, class_idx: str, ques_idx: str, correct_ans, p
             stu_name = dict_s[id]
             dict_a["Student"][stu_name][ques_idx] = chr(ans_dict[id])
             num_total_ans += 1
-            if chr(ans_dict[id]) == correct_ans:
+            if chr(ans_dict[id]) == correct_ans or correct_ans == "V":
                 num_correct_ans += 1
     dict_a["Question"][ques_idx] = [correct_ans, num_total_ans, num_correct_ans, point, ans_time]
     dbm.write_DB(c_db_path, dict_a)

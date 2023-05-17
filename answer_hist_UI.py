@@ -60,7 +60,10 @@ class Detail_history(QMainWindow):
                     if ques_idx in self.dict_stud[stud_name]:
                         # This student has answered the question.
                         stud_ans = self.dict_stud[stud_name][ques_idx]
-                        point = self.dict_ques[ques_idx][3] if stud_ans == self.dict_ques[ques_idx][0] else str(0)
+                        if self.dict_ques[ques_idx][0] == "V":
+                            point = self.dict_ques[ques_idx][3]
+                        else:
+                            point = self.dict_ques[ques_idx][3] if stud_ans == self.dict_ques[ques_idx][0] else str(0)
                         newItem = QTableWidgetItem("%s  [%s]" % (point, stud_ans))
                         total_point += int(point)
                         table.setItem(ri, ci, newItem)
@@ -90,7 +93,6 @@ class Detail_history(QMainWindow):
         correct = re.findall("[\[](.*?)[\]]", chead)[0]
 
         plt.figure()
-        plt.title("Correct Answers: " + correct)
         plt.xlabel("%s-%s" % (self.class_idx, ques_idx))
         plt.ylabel("Number")
 
@@ -102,7 +104,12 @@ class Detail_history(QMainWindow):
 
         num = [ans.count(x) for x in options]
 
-        r_g = ["green" if op == correct else "red" for op in options] # Right answer is "green" and wrong answer is "red".
+        if correct == 'V':
+            plt.title("Vote")
+            r_g = ["green" for op in options]
+        else:
+            plt.title("Correct Answers: " + correct)
+            r_g = ["green" if op == correct else "red" for op in options] # Right answer is "green" and wrong answer is "red".
 
 
         plt.bar(options, num, color = r_g)
