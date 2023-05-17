@@ -163,12 +163,9 @@ int main(void)
 
     int8_t last_display = keyboard_info.display_answer;
 
-    uint8_t temp[4] = {0};
-    uint8_t replic = 0;
     // 键盘读取
     if (KEYBRD_Read_En)
     {
-      
       KEYBRD_Read(KEYBRD_Read_Row, keyboard_info.keypad_state);
     }
     // 键盘处理读取到的状态
