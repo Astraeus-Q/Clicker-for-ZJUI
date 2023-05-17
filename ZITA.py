@@ -17,6 +17,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import random
+import os
 
 class ZI_TA(QMainWindow):
     def __init__(self, course_name):
@@ -24,8 +25,7 @@ class ZI_TA(QMainWindow):
         self.ui = uic.loadUi('UI/ZITA.ui')
         self.ui.setWindowTitle("ZITA")
         self.plot_att()
-        p_attendance = QPixmap("ZITA/attendance.png")
-        self.ui.label_2.setPixmap(p_attendance)
+
 
         self.course_name = course_name
         self.att_remark()
@@ -63,6 +63,9 @@ class ZI_TA(QMainWindow):
 
         plt.plot(new_x, poly(new_x), color='red') # Plot polynomial
         plt.savefig("ZITA/attendance.png")
+        p_attendance = QPixmap("ZITA/attendance.png")
+        self.ui.label_2.setPixmap(p_attendance)
+        os.remove("ZITA/attendance.png")
     
     def att_remark(self):
         # Generate attendance remark.
@@ -129,6 +132,6 @@ class ZI_TA(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = ZI_TA()
+    window = ZI_TA("ECE_110")
     window.ui.show()
     sys.exit(app.exec_())

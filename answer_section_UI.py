@@ -13,6 +13,10 @@ import answer_hist_UI as ah
 import Clicker_backend as cbd
 import Clicker_DB_manager as dbm
 import help
+import plot_window as pw
+import os
+
+import Clicker_UI as cui
 
 
 class Answer_section(QMainWindow):
@@ -24,6 +28,7 @@ class Answer_section(QMainWindow):
         scared_bar = p_bar.scaled(1080, 180)
         self.ui.label_7.setMaximumSize(8100, 1000)
         self.ui.label_7.setPixmap(scared_bar)
+
 
         self.course_name = course_name
         self.course_idx = course_idx
@@ -40,7 +45,7 @@ class Answer_section(QMainWindow):
         # -----Buttons-----
         # Button: Start
         self.ui.pushButton.clicked.connect(self.start_ans)
-        # Button: Interrupt
+        # Button: Abort
         self.ui.pushButton_2.clicked.connect(self.end_ans)
         # Button: Extend
         self.ui.pushButton_9.clicked.connect(self.ext_ans)
@@ -79,7 +84,7 @@ class Answer_section(QMainWindow):
                 cbd.USB_init()
                 self.first = 1
             except:
-                print(QMessageBox.warning(self, "Oops", "Please insert the Clicker Receiver.", QMessageBox.Yes))
+                print(QMessageBox.warning(self, "Oops", "Please insert the Clicker Receiver or turn off Arduino App.", QMessageBox.Yes))
                 self.first = 0
                 return
         self.t_lim = self.ui.spinBox.value()*60 + self.ui.spinBox_2.value()
@@ -90,7 +95,7 @@ class Answer_section(QMainWindow):
         self.ans_time = float(self.t_lim)
         cbd.ans_dict = {}
         cbd.running = 1
-        self.correct = self.ui.lineEdit.text()
+        self.correct = (self.ui.lineEdit.text()).upper()
         self.ques_idx = str(self.ui.spinBox_4.value())
         self.point = str(self.ui.spinBox_3.value())
         
@@ -101,10 +106,10 @@ class Answer_section(QMainWindow):
                 return
             
 
-        if self.correct in ['A', 'B', 'C', 'D']:
+        if self.correct in ['A', 'B', 'C', 'D', 'E', 'V']:
             self.t_display.start()
         else:
-            print(QMessageBox.warning(self, "Oops", "Please Choose a Correct Answer form A, B, C or D.", QMessageBox.Yes))
+            print(QMessageBox.information(self, "Oops", "Please Choose a Correct Answer form A, B, C, D, E or V (for Vote).", QMessageBox.Yes))
 
     def refresh_and_collect(self):
         # Update time display.
@@ -119,6 +124,7 @@ class Answer_section(QMainWindow):
         if self.ans_time < 10:
             self.ui.lcdNumber.setStyleSheet("color: red")
         if self.ans_time <= 0:
+            # End
             self.ui.lcdNumber.setStyleSheet("color: black")
             cbd.running = 0
             self.plotting()
@@ -129,11 +135,17 @@ class Answer_section(QMainWindow):
         return
     
     def plotting(self):
-        cbd.plot_answer(cbd.ans_dict, self.correct)
+        pic_path = self.course_path+"ans.png"
+        cbd.plot_answer(cbd.ans_dict, self.correct, pic_path)
+        global plot_2
+        plot_2 = pw.Plot_win("Answer Distribution", pic_path)
+        plot_2.ui.show()
+        os.remove(pic_path)
         # cbd.plot_attendance()
         return
     
     def end_ans(self):
+        # Abort
         self.ui.lcdNumber.setStyleSheet("color: black")
         self.ui.lcdNumber.display("00:00")
         cbd.running = 0
@@ -164,7 +176,12 @@ class Answer_section(QMainWindow):
         y = [att_stu, tot_stu-att_stu]
         plt.pie(y, labels = ["Present", "Absent"], autopct='%d')
         plt.title("Attendance: %.2f%%" % (100*y[0]/(y[1]+y[0])))
-        plt.show()
+        pic_path = self.course_path+"attendance.png"
+        plt.savefig(pic_path)
+        global plot_1
+        plot_1 = pw.Plot_win("Attendance", pic_path)
+        plot_1.ui.show()
+        os.remove(pic_path)
         
 
     
@@ -195,6 +212,8 @@ class Answer_section(QMainWindow):
         course_ui = cs.Course_section(self.user)
         course_ui.ui.show()
         self.ui.hide()
+
+        cui.db.result_update(self.course_idx)
         return
 
 def t2s(t: int):

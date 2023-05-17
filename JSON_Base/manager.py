@@ -16,7 +16,7 @@ if account == 1:
     dict_ECE_110 = {1:["2023-5-7", "Default Topic"]}
     dict_CS_240 = {}
     dict_Test = {}
-    dict_c = {"ME_200":dict_ECE_110, "Test Clicker":dict_Test}
+    dict_c = {"ME_200":dict_ECE_110, "Test_Clicker":dict_Test}
     dump(dict_c, jf_c, indent=4)
     print("ok")
 
@@ -24,7 +24,7 @@ if account == 1:
     jf_s_1 = open("JSON_Base/admin/ME_200/student.json", "w+")
     jf_s_2 = open("JSON_Base/admin/Test_Clicker/student.json", "w+")
     # ID : Name
-    dict_student = {1111111:"Zhou Qishen", 2004629:"Qiu Yue", 2000277:"Li Bowen", 1111110:"Xie Mu"}
+    dict_student = {"1111111":"Zhou Qishen", "2004629":"Qiu Yue", "2000277":"Li Bowen", "0000001":"Xie Mu"}
     dump(dict_student, jf_s_1, indent=4)
     dump(dict_student, jf_s_2, indent=4)
     print("ok")
@@ -58,16 +58,16 @@ else:
     dict_ECE_110 = {1:["2023-5-7", "Default Topic"]}
     dict_CS_240 = {}
     dict_Test = {}
-    dict_c = {"ECE_110":dict_ECE_110, "CS_240":dict_CS_240, "Test Clicker":dict_Test}
+    dict_c = {"ECE_110":dict_ECE_110, "CS_240":dict_CS_240, "Test_Clicker_R":dict_Test}
     dump(dict_c, jf_c, indent=4)
     print("ok")
 
     # Student
     jf_s_1 = open("JSON_Base/Rigel/ECE_110/student.json", "w+")
     jf_s_2 = open("JSON_Base/Rigel/CS_240/student.json", "w+")
-    jf_s_3 = open("JSON_Base/Rigel/Test_Clicker/student.json", "w+")
+    jf_s_3 = open("JSON_Base/Rigel/Test_Clicker_R/student.json", "w+")
     # ID : Name
-    dict_student = {1111111:"Zhou Qishen", 2004629:"Qiu Yue", 2000277:"Li Bowen", 1111110:"Xie Mu"}
+    dict_student = {"1111111":"Zhou Qishen", "2004629":"Qiu Yue", "2000277":"Li Bowen", "0000001":"Xie Mu"}
     dump(dict_student, jf_s_1, indent=4)
     dump(dict_student, jf_s_2, indent=4)
     dump(dict_student, jf_s_3, indent=4)

@@ -1,10 +1,27 @@
 {
+    "CS_240": {
+        "1": [
+            "2023-5-18",
+            "Chapter 1"
+        ]
+    },
     "ECE_110": {
         "1": [
             "2023-5-17",
             "Default Topic"
+        ],
+        "2": [
+            "2023-5-18",
+            "Default Topic"
+        ],
+        "3": [
+            "2023-5-18",
+            "Chapter 3"
+        ],
+        "4": [
+            "2023-5-18",
+            "Default Topic"
         ]
     },
-    "CS_240": {},
-    "Test Clicker": {}
+    "Test_Clicker_R": {}
 }

@@ -10,6 +10,8 @@ import Clicker_DB_manager as dbm
 import answer_hist_UI as ah
 import ZITA
 
+import Clicker_UI as cui
+
 class Course_history(QMainWindow):
 
     def __init__(self, user_path: str, course_name):
@@ -21,6 +23,7 @@ class Course_history(QMainWindow):
         self.course_name = course_name
         self.course_path = user_path + ("/%s/" % self.course_name)
 
+        cui.db.history_update()
         self.dict_c = (dbm.read_DB(self.user_path+"course.json"))[self.course_name] # Load the course database.
         self.create_table()
 
@@ -76,10 +79,7 @@ class Course_history(QMainWindow):
                     
                 elif j == 2:
                     # Total Student
-                    if no_ques:
-                        newItem = QTableWidgetItem("N.A.")
-                    else:
-                        stu_tot = len(dict_s.keys())
+                    stu_tot = len(dict_s.keys())
                     newItem = QTableWidgetItem(str(stu_tot))
 
                 elif j == 3:
@@ -92,7 +92,7 @@ class Course_history(QMainWindow):
                             if dict_s[si]:
                                 # The student has once answered a question.
                                 stu_att += 1
-                    newItem = QTableWidgetItem(str(stu_att))
+                        newItem = QTableWidgetItem(str(stu_att))
 
                 elif j == 4:
                     # Attandance Rate
@@ -100,7 +100,7 @@ class Course_history(QMainWindow):
                         newItem = QTableWidgetItem("N.A.")
                     else:
                         att_rate = str(int(stu_att/stu_tot*100)) + "%"
-                    newItem = QTableWidgetItem(att_rate)
+                        newItem = QTableWidgetItem(att_rate)
 
                 elif j == 5:
                     # Topic

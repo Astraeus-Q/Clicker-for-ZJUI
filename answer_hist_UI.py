@@ -10,7 +10,9 @@ import matplotlib.pyplot as plt
 import re
 
 import Clicker_DB_manager as dbm
+import plot_window as pw
 
+import Clicker_UI as cui
 
 
 class Detail_history(QMainWindow):
@@ -107,7 +109,12 @@ class Detail_history(QMainWindow):
 
         for x,y in zip(options, num):   
             plt.text(x, y, '%d'%y, ha='center', va='bottom', fontsize=7)
-        plt.show()
+        
+        pic_path = self.course_path+"ans.png"
+        plt.savefig(pic_path)
+        global plot
+        plot = pw.Plot_win("Answer Distribution", pic_path)
+        plot.ui.show()
 
         # try:
         #     img = plt.imread(self.course_path + "%s-%s.png" % (self.class_idx, ques_idx))
@@ -134,6 +141,8 @@ class Ans_history(QMainWindow):
 
         self.course_path = course_path
         self.class_idx = class_idx
+
+        cui.db.history_update()
         self.db_path = course_path + ("%s.json" % self.class_idx)
         self.open_JSONDB()
         self.create_table()
@@ -288,6 +297,6 @@ class Ans_history(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = Ans_history("JSON_Base/admin/ECE_110/", 1)
+    window = Ans_history("JSON_Base/Rigel/ECE_110/", 1)
     window.ui.show()
     sys.exit(app.exec_())

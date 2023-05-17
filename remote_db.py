@@ -220,12 +220,36 @@ class remote_db():
 
         self.db.commit()
     def local_update_course(self):
-        if ~os.path.exists(self.local_cou):
+        if not os.path.exists(self.local_cou):
             course_list = {}
             for row in self.cursor.execute("SELECT course FROM teach "
                                            "WHERE user = ?",(self.local_user,)):
                 course_list[row[0]] = {}
 
+            self.cursor.execute("SELECT week FROM weekly "
+                                    "WHERE course = ? "
+                                    "ORDER BY week DESC "
+                                    "LIMIT 1",(self.local_course,))
+            result = self.cursor.fetchall()
+            if len(result) == 0:
+                pass
+            else:
+            
+                hist = result[0][0]
+                # find if any local cache
+
+                for i in range(hist):
+                    # update course information from database.
+                    if str(i+1) not in course_list[self.local_course].keys():
+                        try:
+                            self.cursor.execute("SELECT c_date, title FROM weekly "
+                                            "WHERE course = :c AND week = :w ", ({"c":self.local_course,"w":int(i+1)}))
+                            result = self.cursor.fetchall()
+                            list_to_w = list(result[0])
+                            course_list[self.local_course][str(i+1)] = list_to_w
+                            dbm.write_DB(self.local_cou,course_list)
+                        except sqlite3.IntegrityError:
+                            pass
             if os.path.exists("./JSON_Base/"+self.local_user+"/"):
                 pass
             else:
@@ -234,7 +258,7 @@ class remote_db():
             dbm.write_DB(self.local_cou,course_list)
 
     def local_student_update(self):
-        if ~os.path.exists(self.local_stu):
+        if not os.path.exists(self.local_stu):
             student_list = {}
             # read the local hardware id, pull the name and net_id into the local.
             for row in self.cursor.execute("SELECT R.hard_id, S.name from register R LEFT OUTER JOIN students S ON R.hard_id = S.hard_id "
@@ -271,14 +295,14 @@ class remote_db():
         total_score = 0
         try:
             for key,values in qs.items():
-                total_score += values[3]
+                total_score += int(values[3])
                 self.cursor.execute("INSERT INTO questions "
                                     "VALUES (?,?,?,?,?,?,?,?)",
-                                    (self.local_course,self.local_class,course_count,key,values[0],values[1],values[2],values[3]))
+                                    (self.local_course,self.local_class,course_count,key,values[0],int(values[1]),int(values[2]),int(values[3])))
 
             self.cursor.execute("INSERT INTO weekly "
                                 "VALUES (?,?,?,?,?,?,?,?)",
-                                (self.local_course,self.local_class,course_count,c_i[1],c_i[2],c_i[3],total_score,c_i[0]))
+                                (self.local_course,self.local_class,course_count,c_i[1],0,0,total_score,c_i[0]))
             # then update the students.
             self.db.commit()
         except sqlite3.IntegrityError:
@@ -337,7 +361,11 @@ class remote_db():
                                    "WHERE course = ? "
                                    "ORDER BY week DESC "
                                    "LIMIT 1",(self.local_course,))
-        hist = self.cursor.fetchall()[0][0]
+        result = self.cursor.fetchall()
+        if len(result) == 0:
+            return
+        
+        hist = result[0][0]
         # find if any local cache
         course_dict = dbm.read_DB(self.local_cou)
 
@@ -345,18 +373,20 @@ class remote_db():
             # update course information from database.
             if str(i+1) not in course_dict[self.local_course].keys():
                 try:
-                    self.cursor.execute("SELECT c_date, title, total,attend FROM weekly "
+                    self.cursor.execute("SELECT c_date, title FROM weekly "
                                         "WHERE course = :c AND week = :w ", ({"c":self.local_course,"w":int(i+1)}))
                     result = self.cursor.fetchall()
                     list_to_w = list(result[0])
-                    list_to_w.append(list_to_w[3] / list_to_w[2])
                     course_dict[self.local_course][str(i+1)] = list_to_w
+                    dbm.write_DB(self.local_cou,course_dict)
                 except sqlite3.IntegrityError:
                     pass
                     # record deleted by admin.
             # update course answers from database.
             target = "./JSON_Base/"+self.local_user+"/"+self.local_course+"/"+str(i+1)+".json"
-            if ~os.path.exists(target):
+            if os.path.exists(target):
+                pass 
+            else: 
                 qs = {}
                 ans = {}
                 try:
@@ -382,15 +412,14 @@ class remote_db():
                         for count in range(len(splits)):
                             ad[str(count+1)] = splits[count]
                         ans[s[0]] = ad
-
+                    dict_to_w ={}
+                    dict_to_w["Question"] = qs
+                    dict_to_w["Student"] = ans
+                    dbm.write_DB(target,dict_to_w)
                 except sqlite3.IntegrityError:
                     pass
                     # record delete by admin.
-                dict_to_w ={}
-                dict_to_w["Question"] = qs
-                dict_to_w["Students"] = ans
-                dbm.write_DB(self.local_cou,course_dict)
-                dbm.write_DB(target,dict_to_w)
+
 
 def main():
     database = remote_db()
@@ -447,7 +476,7 @@ def main():
         database.update_students(key,values,"some_id")
         database.register_course(key,(database.local_course,),(database.local_class,))
     #______________________test 1: local updates ____________________________
-    # database.change_course("ECE_110",1)
+    database.change_course("ECE_110",1)
     #  teacher
     # acc_dict = dbm.read_DB("./JSON_Base/account.json")
     # for key, values in acc_dict.items():
@@ -468,6 +497,9 @@ def main():
     # database.change_course("CS_240",1)
     #
     # database.local_student_update()
+    database.result_update(1)
+    database.result_update(2)
+    database.result_update(3)
 
 
 

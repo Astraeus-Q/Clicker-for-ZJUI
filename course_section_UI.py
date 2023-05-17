@@ -28,6 +28,8 @@ class Course_section(QMainWindow):
 
         self.user_path = "JSON_Base/%s/" % self.user
         self.c_db_path = self.user_path + "course.json"
+        cui.db.change_user(self.user)
+        cui.db.local_update_course()
         dict_c = dbm.read_DB(self.c_db_path)
         self.ui.comboBox.clear()
         self.ui.comboBox.addItems(["Please Select a course"] + list(dict_c.keys())) # Add course selections.
@@ -39,8 +41,11 @@ class Course_section(QMainWindow):
         self.ui.pushButton_5.clicked.connect(self.log_out)
         # Select a course.
         self.ui.comboBox.activated.connect(self.update_course_idx)
+        # Course NO. Changes.
+        self.ui.spinBox.textChanged.connect(self.update_topic)
         # Button: Course History
         self.ui.pushButton_3.clicked.connect(self.course_history)
+        
 
 
     
@@ -54,7 +59,10 @@ class Course_section(QMainWindow):
             if state == 0:
                 # Cancel
                 return
-            ans_ui = aui.Answer_section(self.ui.comboBox.currentText(), str(self.ui.spinBox.value()), self.user)
+            course_name = self.ui.comboBox.currentText()
+            cui.db.change_course(course_name)
+            cui.db.local_student_update()
+            ans_ui = aui.Answer_section(course_name, str(self.ui.spinBox.value()), self.user)
             ans_ui.ui.show()
             self.ui.hide()
 
@@ -76,6 +84,21 @@ class Course_section(QMainWindow):
         for i in self.dict_c[course_name]:
             course_idx = max(course_idx, int(i)+1)
         self.ui.spinBox.setValue(course_idx)
+
+    def update_topic(self):
+        if self.ui.comboBox.currentIndex() == 0:
+            # Course has not been selected.
+            self.ui.lineEdit.setText("Default Topic") # Set default topic.
+            return
+        self.dict_c = dbm.read_DB(self.c_db_path)
+        course_name = self.ui.comboBox.currentText()
+        course_idx = str(self.ui.spinBox.value())
+        if course_idx in self.dict_c[course_name]:
+            self.ui.lineEdit.setText(self.dict_c[course_name][course_idx][1]) # Set specific topic.
+        else:
+            self.ui.lineEdit.setText("Default Topic") # Set default topic.
+
+
 
     def update_JSONDB_course(self):
         dict_c = dbm.read_DB(self.c_db_path)
@@ -107,7 +130,10 @@ class Course_section(QMainWindow):
             QMessageBox.information(self, "Oops", "Please select your course ↖（￣︶￣)>　", QMessageBox.Ok)
             return  
         #if self.
-        hist_u = ch.Course_history(user_path, self.ui.comboBox.currentText())
+        course_name = self.ui.comboBox.currentText()
+        cui.db.change_course(course_name)
+        cui.db.local_student_update()
+        hist_u = ch.Course_history(user_path, course_name)
         hist_u.ui.show()
 
 

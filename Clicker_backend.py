@@ -24,7 +24,7 @@ running = 1
 class Clicker_resp:
     # Include the ID of Clicker and answer.
     def __init__(self, message):
-      self.id = message[ANS_LEN: ANS_LEN + ID_LEN]
+      self.id = "%07d" % int(message[ANS_LEN: ANS_LEN + ID_LEN]) # 7-digit number. 0 is added on the left if needed.
       self.ans = message[0]
 
 def msg_filter(msg:str)->str:
@@ -120,7 +120,7 @@ def USB_read_cont(port:str, timelim)->Clicker_resp:
     print("Section End (^v^)/")
 
 
-def plot_answer(stu_ans:dict, correct):
+def plot_answer(stu_ans:dict, correct, pic_path):
     plt.figure()
     plt.title("Correct Answers: " + correct)
     plt.xlabel("Options")
@@ -137,7 +137,7 @@ def plot_answer(stu_ans:dict, correct):
 
     for x,y in zip(options, num):   
         plt.text(x, y, '%d'%y, ha='center', va='bottom', fontsize=7)
-    plt.show()
+    plt.savefig(pic_path)
     return
 
 def plot_attendance():
