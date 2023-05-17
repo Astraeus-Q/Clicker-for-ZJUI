@@ -8,6 +8,7 @@ import os
 
 import Clicker_DB_manager as dbm
 import answer_hist_UI as ah
+import ZITA
 
 class Course_history(QMainWindow):
 
@@ -34,6 +35,8 @@ class Course_history(QMainWindow):
         self.ui.pushButton_3.clicked.connect(self.remove)
         # Button: Remove Selected
         self.ui.pushButton_5.clicked.connect(self.remove_selected)
+        # Button: ZITA
+        self.ui.pushButton_6.clicked.connect(self.TA)
         # -----Table DoubleClick-----
         self.ui.tableWidget.itemDoubleClicked.connect(self.detail_clicked)
 
@@ -181,7 +184,10 @@ class Course_history(QMainWindow):
                 self.fill_table()
         return        
 
-    
+    def TA(self):
+        global zi_ta
+        zi_ta = ZITA.ZI_TA(self.course_name)
+        zi_ta.ui.show()
 
     
     

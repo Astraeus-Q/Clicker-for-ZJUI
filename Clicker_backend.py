@@ -5,6 +5,7 @@
 '''
 
 import serial
+import serial.tools.list_ports
 import time
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,34 +14,36 @@ import threading
 
 import Clicker_DB_manager as dbm
 
-ID_LEN = 7 # ID of Clicker is a 4-digit number. Like"1234".
-ANS_LEN = 1 # 'A', 'B', 'C', 'D', 'E'
-DIV_LEN = 3 
-MSG_LEN = ANS_LEN + DIV_LEN + ID_LEN + 2 # "[Ans][3 spaces][ID]\r\n"
+ID_LEN = 7 # ID of Clicker is a 7-digit number. Like"0123456".
+ANS_LEN = 1 # 'A', 'B', 'C', 'D' or 'E'
+MSG_LEN = ANS_LEN + ID_LEN + 2 # "[Ans][ID]\r\n"
 
 # Gloabl Variable
 ans_dict = {}
 running = 1
 class Clicker_resp:
     # Include the ID of Clicker and answer.
-    id = 0
-    ans = ''
-
     def __init__(self, message):
-      self.id = int(message[ANS_LEN + DIV_LEN : ANS_LEN + DIV_LEN + ID_LEN])
+      self.id = message[ANS_LEN: ANS_LEN + ID_LEN]
       self.ans = message[0]
 
 def msg_filter(msg:str)->str:
     print(msg)
     if len(msg) ==  MSG_LEN:
-        return 1, msg[:(ID_LEN + ANS_LEN + 3)]
+        return 1, msg[:(ID_LEN + ANS_LEN)]
     else:
         return 0, msg[:(ID_LEN + ANS_LEN)]  
 
 
-def USB_init(port):
-    # Set port value.
-    serialPosrt = port
+def USB_init():
+    # Get the port of Arduino automatically.
+    for pi in list(serial.tools.list_ports.comports()):
+        if pi[2].startswith('USB VID:PID=2341:0043'):
+            # Set port value.
+            serialPosrt = pi[0] 
+            print(serialPosrt)
+            break
+
     # Set baudRate value.
     baudRate = 9600
     # Set timeout, and the unit is second.
@@ -68,7 +71,7 @@ def USB_read():
     status, msg = msg_filter(ser.readline())
     if status:
         c = Clicker_resp(msg)
-        print("ID: %d, Ans: %c" % (c.id, c.ans))
+        print("ID: %s, Ans: %c" % (c.id, c.ans))
         ans_dict[c.id] = c.ans
 
         serLock.release()
@@ -175,11 +178,13 @@ def update_JSONDB_ans(course_path, class_idx: str, ques_idx: str, correct_ans, p
     num_total_ans = 0
     num_correct_ans = 0
     for id in ans_dict:
-        stu_name = dict_s[str(id)]
-        dict_a["Student"][stu_name][ques_idx] = chr(ans_dict[id])
-        num_total_ans += 1
-        if chr(ans_dict[id]) == correct_ans:
-            num_correct_ans += 1
+        if id in dict_s:
+            # Student belongs to this course.
+            stu_name = dict_s[id]
+            dict_a["Student"][stu_name][ques_idx] = chr(ans_dict[id])
+            num_total_ans += 1
+            if chr(ans_dict[id]) == correct_ans:
+                num_correct_ans += 1
     dict_a["Question"][ques_idx] = [correct_ans, num_total_ans, num_correct_ans, point, ans_time]
     dbm.write_DB(c_db_path, dict_a)
     return

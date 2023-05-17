@@ -74,9 +74,9 @@ class Answer_section(QMainWindow):
 
     def start_ans(self):
         if self.first == 0:
-            port = "COM4"
+            #port = "COM4"
             try:
-                cbd.USB_init(port)
+                cbd.USB_init()
                 self.first = 1
             except:
                 print(QMessageBox.warning(self, "Oops", "Please insert the Clicker Receiver.", QMessageBox.Yes))
@@ -205,6 +205,6 @@ def t2s(t: int):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = Answer_section("ECE_110", 1)
+    window = Answer_section("ME_200", 1)
     window.ui.show()
     sys.exit(app.exec_())
