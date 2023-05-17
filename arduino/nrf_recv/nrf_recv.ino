@@ -10,11 +10,13 @@
 #include "nRF24L01.h"
 #include <RF24.h>
 RF24 radio(7, 8); // CE, CSN
-const byte address[6] = "00001";
+const byte address[6] = "10000";
 void setup() {
   Serial.begin(9600);
   radio.begin();
-  radio.openReadingPipe(0, address);
+  radio.setChannel(100);
+  radio.setDataRate(RF24_250KBPS);
+  radio.openReadingPipe(1, address);
   radio.setPALevel(RF24_PA_MIN);
   radio.startListening();
 }

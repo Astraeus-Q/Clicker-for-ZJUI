@@ -1,4 +1,4 @@
-('D:\\CS\\Clicker\\Repo\\build\\Clicker_UI\\Clicker_UI.exe',
+('D:\\CS\\Clicker\\Repo\\build\\Clicker_UI\\ZIC.exe',
  False,
  False,
  True,
@@ -13,7 +13,7 @@
  None,
  None,
  None,
- 'D:\\CS\\Clicker\\Repo\\build\\Clicker_UI\\Clicker_UI.pkg',
+ 'D:\\CS\\Clicker\\Repo\\build\\Clicker_UI\\ZIC.pkg',
  [('PYZ-00.pyz', 'D:\\CS\\Clicker\\Repo\\build\\Clicker_UI\\PYZ-00.pyz', 'PYZ'),
   ('struct',
    'D:\\CS\\Clicker\\Repo\\build\\Clicker_UI\\localpycs\\struct.pyc',
@@ -81,7 +81,7 @@
  [],
  False,
  False,
- 1683249303,
+ 1684155932,
  [('runw.exe',
    'D:\\anaconda\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',
    'EXECUTABLE')])

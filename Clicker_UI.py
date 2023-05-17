@@ -7,15 +7,15 @@ import base64
 import configparser
 
 import hashlib
-import json
 
 # Windows
 from login_UI import Ui_Form
 import course_section_UI as cs
+import Clicker_DB_manager as dbm
 
 # Global Variable
 login_user = "Tester"
-
+REMEMBER_ME = "*" # For Remember Me function.
 class logindialog(QDialog,Ui_Form):
 
     is_admin_signal = pyqtSignal()
@@ -28,15 +28,30 @@ class logindialog(QDialog,Ui_Form):
         self.setFixedSize(self.width(), self.height())  # Fix the window.
         self.setUpUI()
 
+
+
+
     def setUpUI(self):
         self.login_btn.clicked.connect(self.signInCheck)
         self.user_edit.returnPressed.connect(self.signInCheck)
         self.pw_edit.returnPressed.connect(self.signInCheck)
 
+        self.dict_a = dbm.read_DB("JSON_Base/account.json") # Accounts    
+        self.remembered = 0 # Remember me
+        if self.dict_a[REMEMBER_ME] != REMEMBER_ME:
+            print("Remember me")
+            self.remembered = 1
+        if self.remembered:
+            # Remember me
+            self.user_edit.setText(self.dict_a[REMEMBER_ME])
+            self.pw_edit.setText("1234567890")
+            self.checkBox.setChecked(True)
+
     def signInCheck(self):
         username = self.user_edit.text()
         password = self.pw_edit.text()
         #print('username',username, password)
+        succeed = 0
         if (username == "" or password == ""):
             print(QMessageBox.warning(self, "Oops", "Username or Password could not be Empty!", QMessageBox.Yes))
             return
@@ -45,24 +60,35 @@ class logindialog(QDialog,Ui_Form):
             #result = th.select_tb_admin(username) # Get passwords from database
             hl = hashlib.md5()
             hl.update(password.encode(encoding='utf-8'))
-            account_jf = open("JSON_Base/account.json", "r") 
-            account_dict = json.load(account_jf) # Get JSON_DB.
-            account_jf.close()
 
-            if username not in account_dict:
+
+            if username not in self.dict_a:
                 print(QMessageBox.information(self, "Warning", "Username does not exist!", QMessageBox.Yes))
                 return
+            elif username == REMEMBER_ME:
+                QMessageBox.information(self, "Warning", "Username cannot be %s!"% REMEMBER_ME, QMessageBox.Yes)
+                return
+            
             else:
-                if hl.hexdigest() == account_dict[username]:
-                    self.is_student_signal.emit(username)
-                    global login_user
-                    login_user = username
-                    global course_sec
-                    course_sec = cs.Course_section(login_user)
-                    course_sec.ui.show()
+                if hl.hexdigest() == self.dict_a[username]:
+                    succeed = 1
+                elif self.remembered and username == self.dict_a[REMEMBER_ME]:
+                    succeed = 1
                 else:
                     print(QMessageBox.information(self, "Warning", "Password Error!", QMessageBox.Yes))
                     return
+            if succeed == 1:
+                if self.checkBox.isChecked():
+                    self.dict_a[REMEMBER_ME] = username
+                else:
+                    self.dict_a[REMEMBER_ME] = REMEMBER_ME
+                dbm.write_DB("JSON_Base/account.json", self.dict_a)
+                self.is_student_signal.emit(username)
+                global login_user
+                login_user = username
+                global course_sec
+                course_sec = cs.Course_section(login_user)
+                course_sec.ui.show()
             # Login successfully.
             self.login()
             self.accept()

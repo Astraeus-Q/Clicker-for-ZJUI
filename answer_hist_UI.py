@@ -14,7 +14,7 @@ import Clicker_DB_manager as dbm
 
 
 class Detail_history(QMainWindow):
-    def __init__(self, course_path, class_idx, ques_list:list):
+    def __init__(self, course_path, class_idx: str, ques_list: list):
         super().__init__()
         self.ui = uic.loadUi('UI/Answer_detail_hist.ui')
 
@@ -24,7 +24,7 @@ class Detail_history(QMainWindow):
         # Load answer section Json database.
         self.course_path = course_path
         self.class_idx = class_idx
-        db_path = self.course_path + ("%d.json" % self.class_idx)
+        db_path = self.course_path + ("%s.json" % self.class_idx)
         dict_a = dbm.read_DB(db_path) # Open JSON database.
 
         self.dict_ques = dict_a["Question"] # Question Record
@@ -126,7 +126,7 @@ class Detail_history(QMainWindow):
 
 class Ans_history(QMainWindow):
 
-    def __init__(self, course_path, class_idx):
+    def __init__(self, course_path, class_idx: str):
         super().__init__()
         self.ui = uic.loadUi('UI/Answer_hist.ui')
 
@@ -134,7 +134,7 @@ class Ans_history(QMainWindow):
 
         self.course_path = course_path
         self.class_idx = class_idx
-        self.db_path = course_path + ("%d.json" % self.class_idx)
+        self.db_path = course_path + ("%s.json" % self.class_idx)
         self.open_JSONDB()
         self.create_table()
 
@@ -158,14 +158,14 @@ class Ans_history(QMainWindow):
     def open_JSONDB(self):
         self.modified = 0 # Whether the database is modified.
         self.dict_a = dbm.read_DB(self.db_path) # Open JSON database.
-        self.dict_ques = self.dict_a["Question"] # Question Record
-        self.dict_stud = self.dict_a["Student"] # Student Record
+        if self.dict_a:
+            self.dict_ques = self.dict_a["Question"] # Question Record
+            self.dict_stud = self.dict_a["Student"] # Student Record
         return
         
 
     def create_table(self):
-        table = self.ui.tableWidget
-        table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch) # The size of table will fix to the window.
+        self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch) # The size of table will fix to the window.
         self.fill_table()
         return
 
@@ -201,11 +201,11 @@ class Ans_history(QMainWindow):
             table.item(i,0).setCheckState(Qt.Unchecked)
         return
 
-    def remove_one_record(self, ques_idx):
+    def remove_one_record(self, ques_idx: str):
         # Remove the quesion in question record.
         state = self.dict_ques.pop(ques_idx, -1)
         if state == -1:
-            print(QMessageBox.warning(self, "Oops", "No such question", QMessageBox.Yes))
+            print(QMessageBox.warning(self, "Oops", "No such question.", QMessageBox.Yes))
             return
         self.dict_a["Question"] = self.dict_ques
 
@@ -215,7 +215,7 @@ class Ans_history(QMainWindow):
 
         # Delete the statistics chart
         # pic_path = self.course_path + "%s-%s.png" % (self.class_idx, ques_idx)
-        # if(os.path.isfile(pic_path)):
+        # if os.path.isfile(pic_path):
         #     os.remove(pic_path)
         # else:
         #     print("ERROR!!! No such file.")
@@ -240,7 +240,6 @@ class Ans_history(QMainWindow):
                     self.remove_one_record(ques_idx)
             
             if modified == 1:
-                self.dict_a["Question"] = self.dict_ques
                 self.update_jf_a()
                 self.fill_table()
         return
