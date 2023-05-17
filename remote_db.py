@@ -392,12 +392,12 @@ class remote_db():
                 dbm.write_DB(self.local_cou,course_dict)
                 dbm.write_DB(target,dict_to_w)
 
-def main():
-    database = remote_db()
-    database.remote_db_init()
-
-    #______________________test 1: local updates ____________________________
-    database.change_course("ECE_110",1)
+# def main():
+#     database = remote_db()
+#     database.remote_db_init()
+#
+#     #______________________test 1: local updates ____________________________
+#     database.change_course("ECE_110",1)
     #  teacher
     # acc_dict = dbm.read_DB("./JSON_Base/account.json")
     # for key, values in acc_dict.items():
@@ -411,13 +411,13 @@ def main():
     # course_list = dbm.read_DB(database.local_cou)
     # for key,values in course_list.items():
     #     database.update_courses(key,"some course","Fall 2019")
-    stu_list = dbm.read_DB(database.local_stu)
-    for key,values in stu_list.items():
-        database.update_students(key,values,"some_id")
-        database.register_course(key,(database.local_course,),(database.local_class,))
-
-    database.update_students(1233445,"dummy","dummy")
-    database.register_course(1233445,("CS_240",),(1,))
+    # stu_list = dbm.read_DB(database.local_stu)
+    # for key,values in stu_list.items():
+    #     database.update_students(key,values,"some_id")
+    #     database.register_course(key,(database.local_course,),(database.local_class,))
+    #
+    # database.update_students(1233445,"dummy","dummy")
+    # database.register_course(1233445,("CS_240",),(1,))
     # database.change_course("CS_240",1)
     #
     # database.local_student_update()
@@ -431,10 +431,10 @@ def main():
     # database.change_course("CS_240")
     # database.local_student_update();
     # database.result_update(1)
-    database.history_update()
+    # database.history_update()
 
 
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
