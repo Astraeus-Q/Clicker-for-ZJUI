@@ -161,7 +161,7 @@ class remote_db():
                                 "WHERE user = :user", ({"pwd":pwd,"name":name,"pwd_md":pwd_md5,"user":user_name}))
         self.db.commit()
     def sync_local_account(self):
-        account_list = {}
+        account_list = dbm.read_DB("./JSON_Base/account.json")
         for row in self.cursor.execute("SELECT user, pass_md5 FROM teachers ORDER BY user"):
             account_list[row[0]] = row[1]
         # write to local cache.
@@ -392,12 +392,62 @@ class remote_db():
                 dbm.write_DB(self.local_cou,course_dict)
                 dbm.write_DB(target,dict_to_w)
 
-# def main():
-#     database = remote_db()
-#     database.remote_db_init()
-#
-#     #______________________test 1: local updates ____________________________
-#     database.change_course("ECE_110",1)
+def main():
+    database = remote_db()
+    database.remote_db_init()
+
+    database.change_user("admin")
+
+    course_list = dbm.read_DB(database.local_cou)
+
+    acc = dbm.read_DB("./JSON_Base/account.json")
+    for key,values in acc.items():
+        if key == "*":
+            pass
+        else:
+            database.register_teacher(key,"123456",key,values)
+
+    for key,values in course_list.items():
+        database.update_teach(database.local_user,(key,))
+        database.update_courses(key,"some course","Fall 2019")
+
+    database.change_course("ME_200",1)
+    stu_list = dbm.read_DB(database.local_stu)
+    for key,values in stu_list.items():
+        database.update_students(key,values,"some_id")
+        database.register_course(key,(database.local_course,),(database.local_class,))
+
+    database.change_course("Test_Clicker",1)
+    stu_list = dbm.read_DB(database.local_stu)
+    for key,values in stu_list.items():
+        database.update_students(key,values,"some_id")
+        database.register_course(key,(database.local_course,),(database.local_class,))
+
+    database.change_user("Rigel")
+    course_list = dbm.read_DB(database.local_cou)
+    for key,values in course_list.items():
+        database.update_teach(database.local_user,(key,))
+        database.update_courses(key,"some course","Fall 2019")
+
+    database.change_course("CS_240",1)
+    stu_list = dbm.read_DB(database.local_stu)
+    for key,values in stu_list.items():
+        database.update_students(key,values,"some_id")
+        database.register_course(key,(database.local_course,),(database.local_class,))
+
+    database.change_course("ECE_110",1)
+    stu_list = dbm.read_DB(database.local_stu)
+    for key,values in stu_list.items():
+        database.update_students(key,values,"some_id")
+        database.register_course(key,(database.local_course,),(database.local_class,))
+
+    database.change_course("Test_Clicker_R")
+    stu_list = dbm.read_DB(database.local_stu)
+    for key,values in stu_list.items():
+        database.update_students(key,values,"some_id")
+        database.register_course(key,(database.local_course,),(database.local_class,))
+    #______________________test 1: local updates ____________________________
+    # database.change_course("ECE_110",1)
     #  teacher
     # acc_dict = dbm.read_DB("./JSON_Base/account.json")
     # for key, values in acc_dict.items():
@@ -411,30 +461,15 @@ class remote_db():
     # course_list = dbm.read_DB(database.local_cou)
     # for key,values in course_list.items():
     #     database.update_courses(key,"some course","Fall 2019")
-    # stu_list = dbm.read_DB(database.local_stu)
-    # for key,values in stu_list.items():
-    #     database.update_students(key,values,"some_id")
-    #     database.register_course(key,(database.local_course,),(database.local_class,))
-    #
+
+
     # database.update_students(1233445,"dummy","dummy")
     # database.register_course(1233445,("CS_240",),(1,))
     # database.change_course("CS_240",1)
     #
     # database.local_student_update()
 
-    # teach register
-    # database.update_teach("admin",("ECE_110",))
-    # database.update_teach("Rigel",("CS_240", "Test Clicker"))
-    #
-    # database.change_user("Rigel")
-    # database.local_update_course()
-    # database.change_course("CS_240")
-    # database.local_student_update();
-    # database.result_update(1)
-    # database.history_update()
 
 
-
-
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
