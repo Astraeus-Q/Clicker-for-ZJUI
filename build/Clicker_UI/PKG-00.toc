@@ -1,4 +1,4 @@
-('D:\\CS\\Clicker\\Repo\\build\\Clicker_UI\\Clicker_UI.pkg',
+('D:\\CS\\Clicker\\Repo\\build\\Clicker_UI\\ZIC.pkg',
  {'BINARY': True,
   'DATA': True,
   'EXECUTABLE': True,

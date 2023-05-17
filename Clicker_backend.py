@@ -165,8 +165,8 @@ def collect_ans(timelim):
 
     return stu_ans
 
-def update_JSONDB_ans(course_path, class_idx: int, ques_idx: str, correct_ans, point: str, ans_time):
-    c_db_path = course_path + ("%d.json" % class_idx)
+def update_JSONDB_ans(course_path, class_idx: str, ques_idx: str, correct_ans, point: str, ans_time):
+    c_db_path = course_path + ("%s.json" % class_idx)
     dict_a = dbm.read_DB(c_db_path)
     s_db_path = course_path + "student.json"
     dict_s = dbm.read_DB(s_db_path)

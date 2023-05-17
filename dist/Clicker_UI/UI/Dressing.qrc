@@ -1,8 +1,0 @@
-<RCC>
-  <qresource prefix="Bar">
-    <file>Moon1.jpg</file>
-    <file>Spaceship.jpg</file>
-    <file>Earth_wb.jpg</file>
-    <file>Galaxy1.png</file>
-  </qresource>
-</RCC>

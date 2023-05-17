@@ -10,10 +10,10 @@ print("ok")
 # Course
 jf_c = open("JSON_Base/admin/course.json", "w+")
 # Class number : [Date, Topic, # should come, # came, attendance]
-dict_ECE_110 = {1:["2023-5-7", "Default Topic", 4, 4, 1]}
+dict_ECE_110 = {1:["2023-5-7", "Default Topic"]}
 dict_CS_240 = {}
 dict_Test = {}
-dict_c = {"ECE 110":dict_ECE_110, "CS 240":dict_CS_240, "Test Clicker":dict_Test}
+dict_c = {"ECE_110":dict_ECE_110, "CS_240":dict_CS_240, "Test Clicker":dict_Test}
 dump(dict_c, jf_c, indent=4)
 print("ok")
 

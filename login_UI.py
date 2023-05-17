@@ -81,7 +81,7 @@ class Ui_Form(object):
         self.checkBox.setFont(font_12)
 
         # Title
-        Form.setWindowTitle("Clicker")
+        Form.setWindowTitle("Welcome to ZIC")
 
         #self.retranslateUi(Form) # Chinese version
         QtCore.QMetaObject.connectSlotsByName(Form)
