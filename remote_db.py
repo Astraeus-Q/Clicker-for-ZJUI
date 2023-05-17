@@ -199,15 +199,15 @@ class remote_db():
                                         "VALUES (?,?,?)",(courses[i],hard_id,class_num[i]))
                 self.db.commit()
             except sqlite3.IntegrityError:
-                print(" some course has registered! ")
+                print(" course already registered! ")
         else:
             try:
                 for i in range(len(courses)):
-                    self.cursor.execute("DELETE FROM register (course,hard_id,class)"
+                    self.cursor.execute("DELETE FROM register "
                                         "WHERE hard_id = ?, course = ?",(hard_id,courses[i]))
                 self.db.commit()
             except sqlite3.IntegrityError:
-                print(" Some course not exits! ")
+                print(" course not exits! ")
 
     def update_courses(self, course_number:str, course_name:str, semester:str):
         try :
@@ -339,9 +339,11 @@ class remote_db():
                                     "SET " + ans_name +" = ? "
                                     "WHERE hard_id = ? AND course = ? ",
                                     (answer_char, hid, self.local_course))
+
             except:
                 sql_exec = ["ALTER TABLE register ADD " + week_name + " REAL DEFAULT 0",
                             "ALTER TABLE register ADD " + ans_name + " CHAR(10) DEFAULT " + "_"]
+
                 self.cursor.execute(sql_exec[0])
                 self.cursor.execute(sql_exec[1])
                 self.cursor.execute("UPDATE register "
@@ -370,17 +372,17 @@ class remote_db():
         course_dict = dbm.read_DB(self.local_cou)
 
         for i in range(hist):
-            # update course information from database.
-            if str(i+1) not in course_dict[self.local_course].keys():
-                try:
-                    self.cursor.execute("SELECT c_date, title FROM weekly "
-                                        "WHERE course = :c AND week = :w ", ({"c":self.local_course,"w":int(i+1)}))
-                    result = self.cursor.fetchall()
-                    list_to_w = list(result[0])
-                    course_dict[self.local_course][str(i+1)] = list_to_w
-                    dbm.write_DB(self.local_cou,course_dict)
-                except sqlite3.IntegrityError:
-                    pass
+            # # update course information from database.
+            # if str(i+1) not in course_dict[self.local_course].keys():
+            #     try:
+            #         self.cursor.execute("SELECT c_date, title FROM weekly "
+            #                             "WHERE course = :c AND week = :w ", ({"c":self.local_course,"w":int(i+1)}))
+            #         result = self.cursor.fetchall()
+            #         list_to_w = list(result[0])
+            #         course_dict[self.local_course][str(i+1)] = list_to_w
+            #         dbm.write_DB(self.local_cou,course_dict)
+            #     except sqlite3.IntegrityError:
+            #         pass
                     # record deleted by admin.
             # update course answers from database.
             target = "./JSON_Base/"+self.local_user+"/"+self.local_course+"/"+str(i+1)+".json"
@@ -395,15 +397,22 @@ class remote_db():
                                         "WHERE course = ? AND week = ?"
                                         "ORDER BY question", (self.local_course,str(i+1)))
                     result = self.cursor.fetchall()
+                    if len(result) == 0:
+                        return
+
                     for q_num in range(len(result)):
                         q_list = list(result[q_num])
                         q_list.pop(0)
                         q_list.append(0)
                         qs[str(q_num+1)] = q_list
-                    sql_exec = "SELECT S.name, ans_"+str(i+1)+" FROM register R LEFT OUTER JOIN students S ON R.hard_id = S.hard_id WHERE course = ? ORDER BY R.hard_id"
+                    sql_exec = "SELECT S.name, ans_"+str(i+1)+\
+                               " FROM register R LEFT OUTER JOIN students S ON R.hard_id = S.hard_id WHERE course = ? ORDER BY R.hard_id"
                     # print(sql_exec)
                     self.cursor.execute(sql_exec, (self.local_course,))
                     result = self.cursor.fetchall()
+
+                    if len(result) == 0:
+                        return
                     # print(result)
                     for s in result:
                         ad = {}
@@ -419,63 +428,81 @@ class remote_db():
                 except sqlite3.IntegrityError:
                     pass
                     # record delete by admin.
+    def history_delete(self,course_count:int):
+        # delete all relative from database.
+        print(self.local_course)
+        self.cursor.execute("DELETE FROM weekly "
+                            "WHERE course = ? AND week = ?", (self.local_course, str(course_count),))
+        self.cursor.execute("DELETE FROM questions "
+                            "WHERE course = ? AND week = ?", (self.local_course, str(course_count),))
 
+
+        try:
+            week_name = "week_" + str(course_count)
+            ans_name = "ans_" + str(course_count)
+            self.cursor.execute("UPDATE register "
+                                "SET " + ans_name + "= '_', "+week_name+" = 0 "
+                                "WHERE course = ? ", (self.local_course,))
+        except sqlite3.IntegrityError:
+            pass
+
+        self.db.commit()
 
 def main():
     database = remote_db()
-    database.remote_db_init()
+    # database.remote_db_init()
 
-    database.change_user("admin")
-
-    course_list = dbm.read_DB(database.local_cou)
-
-    acc = dbm.read_DB("./JSON_Base/account.json")
-    for key,values in acc.items():
-        if key == "*":
-            pass
-        else:
-            database.register_teacher(key,"123456",key,values)
-
-    for key,values in course_list.items():
-        database.update_teach(database.local_user,(key,))
-        database.update_courses(key,"some course","Fall 2019")
-
-    database.change_course("ME_200",1)
-    stu_list = dbm.read_DB(database.local_stu)
-    for key,values in stu_list.items():
-        database.update_students(key,values,"some_id")
-        database.register_course(key,(database.local_course,),(database.local_class,))
-
-    database.change_course("Test_Clicker",1)
-    stu_list = dbm.read_DB(database.local_stu)
-    for key,values in stu_list.items():
-        database.update_students(key,values,"some_id")
-        database.register_course(key,(database.local_course,),(database.local_class,))
-
-    database.change_user("Rigel")
-    course_list = dbm.read_DB(database.local_cou)
-    for key,values in course_list.items():
-        database.update_teach(database.local_user,(key,))
-        database.update_courses(key,"some course","Fall 2019")
-
-    database.change_course("CS_240",1)
-    stu_list = dbm.read_DB(database.local_stu)
-    for key,values in stu_list.items():
-        database.update_students(key,values,"some_id")
-        database.register_course(key,(database.local_course,),(database.local_class,))
-
-    database.change_course("ECE_110",1)
-    stu_list = dbm.read_DB(database.local_stu)
-    for key,values in stu_list.items():
-        database.update_students(key,values,"some_id")
-        database.register_course(key,(database.local_course,),(database.local_class,))
-
-    database.change_course("Test_Clicker_R")
-    stu_list = dbm.read_DB(database.local_stu)
-    for key,values in stu_list.items():
-        database.update_students(key,values,"some_id")
-        database.register_course(key,(database.local_course,),(database.local_class,))
-    #______________________test 1: local updates ____________________________
+    # database.change_user("admin")
+    #
+    # course_list = dbm.read_DB(database.local_cou)
+    #
+    # acc = dbm.read_DB("./JSON_Base/account.json")
+    # for key,values in acc.items():
+    #     if key == "*":
+    #         pass
+    #     else:
+    #         database.register_teacher(key,"123456",key,values)
+    #
+    # for key,values in course_list.items():
+    #     database.update_teach(database.local_user,(key,))
+    #     database.update_courses(key,"some course","Fall 2019")
+    #
+    # database.change_course("ME_200",1)
+    # stu_list = dbm.read_DB(database.local_stu)
+    # for key,values in stu_list.items():
+    #     database.update_students(key,values,"some_id")
+    #     database.register_course(key,(database.local_course,),(database.local_class,))
+    #
+    # database.change_course("Test_Clicker",1)
+    # stu_list = dbm.read_DB(database.local_stu)
+    # for key,values in stu_list.items():
+    #     database.update_students(key,values,"some_id")
+    #     database.register_course(key,(database.local_course,),(database.local_class,))
+    #
+    # database.change_user("Rigel")
+    # course_list = dbm.read_DB(database.local_cou)
+    # for key,values in course_list.items():
+    #     database.update_teach(database.local_user,(key,))
+    #     database.update_courses(key,"some course","Fall 2019")
+    #
+    # database.change_course("CS_240",1)
+    # stu_list = dbm.read_DB(database.local_stu)
+    # for key,values in stu_list.items():
+    #     database.update_students(key,values,"some_id")
+    #     database.register_course(key,(database.local_course,),(database.local_class,))
+    #
+    # database.change_course("ECE_110",1)
+    # stu_list = dbm.read_DB(database.local_stu)
+    # for key,values in stu_list.items():
+    #     database.update_students(key,values,"some_id")
+    #     database.register_course(key,(database.local_course,),(database.local_class,))
+    #
+    # database.change_course("Test_Clicker_R",1)
+    # stu_list = dbm.read_DB(database.local_stu)
+    # for key,values in stu_list.items():
+    #     database.update_students(key,values,"some_id")
+    #     database.register_course(key,(database.local_course,),(database.local_class,))
+    # #______________________test 1: local updates ____________________________
     database.change_course("ECE_110",1)
     #  teacher
     # acc_dict = dbm.read_DB("./JSON_Base/account.json")
@@ -497,9 +524,12 @@ def main():
     # database.change_course("CS_240",1)
     #
     # database.local_student_update()
-    database.result_update(1)
-    database.result_update(2)
-    database.result_update(3)
+    # database.result_update(1)
+    # database.result_update(2)
+    # database.result_update(3)
+
+    # database.history_delete(1)
+    # database.history_delete(2)
 
 
 
