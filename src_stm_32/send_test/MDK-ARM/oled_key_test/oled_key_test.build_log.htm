@@ -1,0 +1,169 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.38.0.0
+Copyright (C) 2022 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Mu x, x, LIC=QF82M-X08XF-Z9FG9-42SBY-JICFP-IU5Z5
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.38.0.0
+Toolchain Path:  D:\dev\Keil5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.19
+Assembler:       Armasm.exe V6.19
+Linker/Locator:  ArmLink.exe V6.19
+Library Manager: ArmAr.exe V6.19
+Hex Converter:   FromElf.exe V6.19
+CPU DLL:         SARMCM3.DLL V5.38.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      Segger\JL2CM3.dll V2.99.42.0
+Dialog DLL:      TCM.DLL V1.56.4.0
+ 
+<h2>Project:</h2>
+E:\home-mu\Documents\Work\temp\test\send_test\MDK-ARM\oled_key_test.uvprojx
+Project File Date:  05/17/2023
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.19', folder: 'D:\dev\Keil5\ARM\ARMCLANG\Bin'
+Rebuild target 'oled_key_test'
+../ui/user_interface.c(8): warning: passing 'char[15]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+    OLED_ShowStr(0,2," IClicker ZJU ",2);
+                     ^~~~~~~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(9): warning: passing 'char[11]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+    OLED_ShowStr(30,6," Ver 1.2  ",2);
+                      ^~~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(16): warning: passing 'char[14]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+        OLED_ShowStr(10,0,"Please input ",2);
+                          ^~~~~~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(17): warning: passing 'char[12]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+        OLED_ShowStr(10,4,"your answer",2);
+                          ^~~~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(24): warning: passing 'char[16]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+            OLED_ShowStr(20,6,"SEND SUCCESSFUL",1);
+                              ^~~~~~~~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(28): warning: passing 'char[10]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+            OLED_ShowStr(10,0,"Answer: A",2);
+                              ^~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(36): warning: passing 'char[16]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+            OLED_ShowStr(20,6,"SEND SUCCESSFUL",1);
+                              ^~~~~~~~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(40): warning: passing 'char[10]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+            OLED_ShowStr(10,0,"Answer: B",2);
+                              ^~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(48): warning: passing 'char[16]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+            OLED_ShowStr(20,6,"SEND SUCCESSFUL",1);
+                              ^~~~~~~~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(52): warning: passing 'char[10]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+            OLED_ShowStr(10,0,"Answer: C",2);
+                              ^~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(60): warning: passing 'char[16]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+            OLED_ShowStr(20,6,"SEND SUCCESSFUL",1);
+                              ^~~~~~~~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(64): warning: passing 'char[10]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+            OLED_ShowStr(10,0,"Answer: D",2);
+                              ^~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+../ui/user_interface.c(70): warning: passing 'char[11]' to parameter of type 'unsigned char *' converts between pointers to integer types where one is of the unique plain 'char' type and the other is not [-Wpointer-sign]
+        OLED_ShowStr(20,4,"SENDING...",2);
+                          ^~~~~~~~~~~~
+../oled/OLED\oled.h(52): note: passing argument to parameter 'ch' here
+void OLED_ShowStr(unsigned char x, unsigned char y, unsigned char ch[], unsigned char TextSize);//?????
+                                                                  ^
+13 warnings generated.
+compiling user_interface.c...
+compiling gpio.c...
+../NRF/nrf24l01p.c(186): warning: implicit conversion from enumeration type 'FlagStatus' to different enumeration type 'GPIO_PinState' [-Wenum-conversion]
+        HAL_GPIO_WritePin(NRF24L01P_IRQ_PIN_PORT, NRF24L01P_IRQ_PIN_NUMBER, SET);
+        ~~~~~~~~~~~~~~~~~                                                   ^~~
+1 warning generated.
+compiling nrf24l01p.c...
+compiling keybrd.c...
+compiling main.c...
+compiling oled.c...
+assembling startup_stm32f103xe.s...
+compiling stm32f1xx_it.c...
+compiling spi.c...
+compiling tim.c...
+compiling stm32f1xx_hal_msp.c...
+compiling stm32f1xx_hal_gpio_ex.c...
+compiling stm32f1xx_hal.c...
+compiling stm32f1xx_hal_spi.c...
+compiling stm32f1xx_hal_rcc_ex.c...
+compiling stm32f1xx_hal_rcc.c...
+compiling stm32f1xx_hal_gpio.c...
+compiling stm32f1xx_hal_pwr.c...
+compiling stm32f1xx_hal_cortex.c...
+compiling stm32f1xx_hal_dma.c...
+compiling stm32f1xx_hal_flash.c...
+compiling stm32f1xx_hal_flash_ex.c...
+compiling stm32f1xx_hal_exti.c...
+compiling system_stm32f1xx.c...
+compiling stm32f1xx_hal_tim_ex.c...
+compiling stm32f1xx_hal_tim.c...
+linking...
+Program Size: Code=14690 RO-data=2546 RW-data=12 ZI-data=1844  
+FromELF: creating hex file...
+"oled_key_test\oled_key_test.axf" - 0 Error(s), 14 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.9.0.pack
+                ARM.CMSIS.5.9.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.6.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F1xx_DFP.2.4.1.pack
+                Keil.STM32F1xx_DFP.2.4.1
+                STMicroelectronics STM32F1 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/_oled_key_test
+  D:/dev/Keil5_Pack/ARM/CMSIS/5.9.0/CMSIS/Core/Include
+  D:/dev/Keil5_Pack/Keil/STM32F1xx_DFP/2.4.1/Device/Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.6.0
+      Include file:  CMSIS/Core/Include/tz_context.h
+Build Time Elapsed:  00:00:04
+</pre>
+</body>
+</html>
