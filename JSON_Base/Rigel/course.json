@@ -2,26 +2,18 @@
     "CS_240": {
         "1": [
             "2023-5-18",
-            "Chapter 1"
+            "Default Topic"
         ],
         "2": [
             "2023-5-18",
-            "Cloud Computing"
+            "CLoud Computing"
         ],
         "3": [
             "2023-5-18",
-            "Default Topic"
-        ],
-        "4": [
-            "2023-5-18",
-            "Default Topic"
+            "Cloud Computing"
         ]
     },
     "ECE_110": {
-        "1": [
-            "2023-5-17",
-            "Default Topic"
-        ],
         "2": [
             "2023-5-18",
             "Default Topic"
@@ -31,6 +23,14 @@
             "Chapter 3"
         ],
         "4": [
+            "2023-5-18",
+            "Default Topic"
+        ],
+        "1": [
+            "2023-5-18",
+            "First"
+        ],
+        "5": [
             "2023-5-18",
             "Default Topic"
         ]

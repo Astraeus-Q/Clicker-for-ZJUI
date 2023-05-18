@@ -29,6 +29,7 @@ class ZI_TA(QMainWindow):
 
         self.course_name = course_name
         self.att_remark()
+        self.course_remark()
 
     def plot_att(self):
         plt.figure()
@@ -122,9 +123,48 @@ class ZI_TA(QMainWindow):
             
         self.ui.plainTextEdit_2.setPlainText(remark)
 
-    # def course_remark(self):
-    #     # Generate course remark.
-    #     if self.course_name == 
+    def course_remark(self):
+        # Generate course remark.
+        if self.course_name == "Test_Clicker_R" or self.course_name == "Test_Clicker":
+            self.ui.plainTextEdit.setPlainText("This is a Test.")
+            return
+        remark = ""
+        if self.course_name == "ECE_110":
+            remark += "Classes with high accuracy:\n\bClass 1, Topic: Ohm's Law, 90%\n\bClass 5, Topic: Kirchhoff's Law, 86%\n"
+            f_adv = open("ZITA/advice_easy.txt", "r")
+            remark += "Comment: %s\n" % random.choice(f_adv.readlines())
+            f_adv.close()
+            remark += "------------------------------------------------------\n"
+            remark += "\nClasses with low accuracy:\n\bClass 8, Topic: MCU Programming, 23%\n\bClass 10, Topic: SOC, 31%\n"
+            f_adv = open("ZITA/advice_hard.txt", "r")
+            remark += "Strategy: %s" % random.choice(f_adv.readlines())
+            f_adv.close()
+
+        elif self.course_name == "CS_240":
+            remark += "Classes with high accuracy:\n\bClass 1, Topic: Intro to OS, 88%\n\bClass 3, Topic: Memory, 92%\n"
+            f_adv = open("ZITA/advice_easy.txt", "r")
+            remark += "Comment: %s\n" % random.choice(f_adv.readlines())
+            f_adv.close()
+            remark += "------------------------------------------------------\n"
+            remark += "\nClasses with low accuracy:\n\bClass 6, Topic: PNG, 36%\n\bClass 12, Topic: Cloud Computing, 24%\n"
+            f_adv = open("ZITA/advice_hard.txt", "r")
+            remark += "Strategy: %s" % random.choice(f_adv.readlines())
+            f_adv.close()
+
+        elif self.course_name == "ME_200":
+            remark += "Classes with high accuracy:\n\bClass 1, Topic: Thermo, 82%\n\bClass 3, Topic: Molecular movement, 85%\n"
+            f_adv = open("ZITA/advice_easy.txt", "r")
+            remark += "Comment: %s\n" % random.choice(f_adv.readlines())
+            f_adv.close()
+            remark += "------------------------------------------------------\n"
+            remark += "\nClasses with low accuracy:\n\bClass 8, Topic: Heat Transfer, 32%\n\bClass 11, Topic: Clausius Inequality, 11%\n"
+            f_adv = open("ZITA/advice_hard.txt", "r")
+            remark += "Strategy: %s" % random.choice(f_adv.readlines())
+            f_adv.close()
+        
+        self.ui.plainTextEdit.setPlainText(remark)
+
+
         
 
             

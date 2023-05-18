@@ -148,6 +148,7 @@ class Course_history(QMainWindow):
         dbm.write_DB(self.user_path+"course.json", dict_all_c)
 
     def remove_one_record(self, class_idx: str):
+        #cui.db.history_delete(class_idx)
         # Remove the class in class record.
         state = self.dict_c.pop(class_idx, -1)
         if state == -1:

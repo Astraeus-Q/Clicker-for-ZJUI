@@ -186,6 +186,8 @@ def update_JSONDB_ans(course_path, class_idx: str, ques_idx: str, correct_ans, p
         if id in dict_s:
             # Student belongs to this course.
             stu_name = dict_s[id]
+            if stu_name not in dict_a["Student"]:
+                dict_a["Student"][stu_name] = {}
             dict_a["Student"][stu_name][ques_idx] = chr(ans_dict[id])
             num_total_ans += 1
             if chr(ans_dict[id]) == correct_ans or correct_ans == "V":
