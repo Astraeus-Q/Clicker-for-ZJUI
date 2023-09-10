@@ -10,7 +10,7 @@ import Clicker_DB_manager as dbm
 import answer_hist_UI as ah
 import ZITA
 
-import Clicker_UI as cui
+#import Clicker_UI as cui # For remote db
 
 class Course_history(QMainWindow):
 
@@ -23,7 +23,7 @@ class Course_history(QMainWindow):
         self.course_name = course_name
         self.course_path = user_path + ("/%s/" % self.course_name)
 
-        cui.db.history_update()
+        #cui.db.history_update()
         self.dict_c = (dbm.read_DB(self.user_path+"course.json"))[self.course_name] # Load the course database.
         self.create_table()
 

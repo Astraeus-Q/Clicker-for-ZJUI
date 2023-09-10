@@ -1253,7 +1253,7 @@
             <string notr="true">background-color:rgb(217, 19, 35)</string>
            </property>
            <property name="text">
-            <string>End Course</string>
+            <string>End Course + Sync</string>
            </property>
           </widget>
          </item>

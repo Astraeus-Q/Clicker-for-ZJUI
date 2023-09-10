@@ -28,8 +28,10 @@ class Course_section(QMainWindow):
 
         self.user_path = "JSON_Base/%s/" % self.user
         self.c_db_path = self.user_path + "course.json"
-        cui.db.change_user(self.user)
-        cui.db.local_update_course()
+
+        # Remote db
+        #cui.db.change_user(self.user)
+        #cui.db.local_update_course()
         dict_c = dbm.read_DB(self.c_db_path)
         self.ui.comboBox.clear()
         self.ui.comboBox.addItems(["Please Select a course"] + list(dict_c.keys())) # Add course selections.
@@ -60,8 +62,10 @@ class Course_section(QMainWindow):
                 # Cancel
                 return
             course_name = self.ui.comboBox.currentText()
-            cui.db.change_course(course_name)
-            cui.db.local_student_update()
+
+            # Remote db
+            #cui.db.change_course(course_name)
+            #cui.db.local_student_update()
             ans_ui = aui.Answer_section(course_name, str(self.ui.spinBox.value()), self.user)
             ans_ui.ui.show()
             self.ui.hide()
@@ -131,8 +135,11 @@ class Course_section(QMainWindow):
             return  
         #if self.
         course_name = self.ui.comboBox.currentText()
-        cui.db.change_course(course_name)
-        cui.db.local_student_update()
+
+        # Remote db
+        #cui.db.change_course(course_name)
+        #cui.db.local_student_update()
+
         hist_u = ch.Course_history(user_path, course_name)
         hist_u.ui.show()
 

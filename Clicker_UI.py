@@ -12,7 +12,8 @@ import hashlib
 from login_UI import Ui_Form
 import course_section_UI as cs
 import Clicker_DB_manager as dbm
-import remote_db
+
+#import remote_db
 
 # Global Variable
 login_user = "Tester"
@@ -38,7 +39,8 @@ class logindialog(QDialog,Ui_Form):
         self.user_edit.returnPressed.connect(self.signInCheck)
         self.pw_edit.returnPressed.connect(self.signInCheck)
 
-        db.sync_local_account()
+        # Remote db
+        # db.sync_local_account()
         self.dict_a = dbm.read_DB("JSON_Base/account.json") # Accounts    
         self.remembered = 0 # Remember me
         if self.dict_a[REMEMBER_ME] != REMEMBER_ME:
@@ -122,7 +124,8 @@ class logindialog(QDialog,Ui_Form):
 
         print(self.user_name, self.password)
 
-db = remote_db.remote_db()
+# Remote db
+# db = remote_db.remote_db()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

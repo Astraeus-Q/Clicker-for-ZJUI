@@ -12,7 +12,7 @@ import re
 import Clicker_DB_manager as dbm
 import plot_window as pw
 
-import Clicker_UI as cui
+#import Clicker_UI as cui # For remote db
 
 
 class Detail_history(QMainWindow):
@@ -149,7 +149,9 @@ class Ans_history(QMainWindow):
         self.course_path = course_path
         self.class_idx = class_idx
 
-        cui.db.history_update()
+        # Remote db.
+        #cui.db.history_update()
+        
         self.db_path = course_path + ("%s.json" % self.class_idx)
         self.open_JSONDB()
         self.create_table()

@@ -16,7 +16,7 @@ import help
 import plot_window as pw
 import os
 
-import Clicker_UI as cui
+#import Clicker_UI as cui # For remote db
 
 
 class Answer_section(QMainWindow):
@@ -65,7 +65,8 @@ class Answer_section(QMainWindow):
         self.timeLock = threading.Lock()
         self.ans_time = 0
         self.t_display = QTimer(self)
-        self.t_display.setInterval(500)
+        self.read_port_t = 500
+        self.t_display.setInterval(self.read_port_t)
         self.t_display.timeout.connect(self.refresh_and_collect)
         self.ui.lcdNumber.display("00:00")
         self.ui.progressBar.setValue(0)
@@ -116,9 +117,11 @@ class Answer_section(QMainWindow):
         self.timeLock.acquire()
         # Count down
         self.ui.lcdNumber.display(t2s(int(self.ans_time)))
-        progress = int(0 if len(cbd.ans_dict) == 0 else len(cbd.ans_dict) / 4 * 100)
+        dict_s = dbm.read_DB(self.course_path+"student.json")
+        tot_student = len(dict_s.keys())
+        progress = int(0 if len(cbd.ans_dict) == 0 else len(cbd.ans_dict) / tot_student * 100)
         self.ui.progressBar.setValue(progress)
-        self.ans_time -= 0.5
+        self.ans_time -= self.read_port_t / 1000
         t = threading.Thread(target = cbd.USB_read)
         t.start()
         if self.ans_time < 10:
@@ -128,7 +131,7 @@ class Answer_section(QMainWindow):
             self.ui.lcdNumber.setStyleSheet("color: black")
             cbd.running = 0
             self.plotting()
-            cbd.update_JSONDB_ans(self.course_path, self.course_idx, self.ques_idx, self.correct, self.point, self.t_lim) # TODO
+            cbd.update_JSONDB_ans(self.course_path, self.course_idx, self.ques_idx, self.correct, self.point, self.t_lim)
             self.update_question_idx()
             self.t_display.stop()
         self.timeLock.release()
@@ -213,7 +216,9 @@ class Answer_section(QMainWindow):
         course_ui.ui.show()
         self.ui.hide()
 
-        cui.db.result_update(self.course_idx)
+        # Remote db
+        #cui.db.result_update(self.course_idx)
+        
         return
 
 def t2s(t: int):

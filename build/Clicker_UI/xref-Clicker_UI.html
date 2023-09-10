@@ -18,7 +18,8 @@
   <a target="code" href="///D:/CS/Clicker/Repo/Clicker_UI.py" type="text/plain"><tt>Clicker_UI.py</tt></a>
 <span class="moduletype">Script</span>  <div class="import">
 imports:
-    <a href="#Clicker_backend.py">Clicker_backend.py</a>
+    <a href="#Clicker_DB_manager">Clicker_DB_manager</a>
+ &#8226;   <a href="#Clicker_backend.py">Clicker_backend.py</a>
  &#8226;   <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
  &#8226;   <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
  &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
@@ -164,7 +165,6 @@ imports:
  &#8226;   <a href="#hashlib">hashlib</a>
  &#8226;   <a href="#heapq">heapq</a>
  &#8226;   <a href="#io">io</a>
- &#8226;   <a href="#json">json</a>
  &#8226;   <a href="#keyword">keyword</a>
  &#8226;   <a href="#linecache">linecache</a>
  &#8226;   <a href="#locale">locale</a>
@@ -250,6 +250,8 @@ imports:
  &#8226;   <a href="#course_section_UI">course_section_UI</a>
  &#8226;   <a href="#help">help</a>
  &#8226;   <a href="#matplotlib.pyplot">matplotlib.pyplot</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#plot_window">plot_window</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#threading">threading</a>
  &#8226;   <a href="#time">time</a>
@@ -1029,7 +1031,9 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#Clicker_backend">Clicker_backend</a>
+    <a href="#Clicker_UI">Clicker_UI</a>
+ &#8226;   <a href="#Clicker_UI.py">Clicker_UI.py</a>
+ &#8226;   <a href="#Clicker_backend">Clicker_backend</a>
  &#8226;   <a href="#Clicker_backend.py">Clicker_backend.py</a>
  &#8226;   <a href="#answer_hist_UI">answer_hist_UI</a>
  &#8226;   <a href="#answer_section_UI">answer_section_UI</a>
@@ -1047,14 +1051,14 @@ imported by:
   <a target="code" href="///D:/CS/Clicker/Repo/Clicker_UI.py" type="text/plain"><tt>Clicker_UI</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
+    <a href="#Clicker_DB_manager">Clicker_DB_manager</a>
+ &#8226;   <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
  &#8226;   <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
  &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
  &#8226;   <a href="#base64">base64</a>
  &#8226;   <a href="#configparser">configparser</a>
  &#8226;   <a href="#course_section_UI">course_section_UI</a>
  &#8226;   <a href="#hashlib">hashlib</a>
- &#8226;   <a href="#json">json</a>
  &#8226;   <a href="#login_UI">login_UI</a>
  &#8226;   <a href="#sys">sys</a>
 
@@ -6547,6 +6551,7 @@ imported by:
  &#8226;   <a href="#PyQt5.uic">PyQt5.uic</a>
  &#8226;   <a href="#PyQt5.uic.Loader.loader">PyQt5.uic.Loader.loader</a>
  &#8226;   <a href="#PyQt5.uic.Loader.qobjectcreator">PyQt5.uic.Loader.qobjectcreator</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#answer_hist_UI">answer_hist_UI</a>
  &#8226;   <a href="#answer_section_UI">answer_section_UI</a>
  &#8226;   <a href="#answer_section_UI.py">answer_section_UI.py</a>
@@ -6558,6 +6563,7 @@ imported by:
  &#8226;   <a href="#login_UI">login_UI</a>
  &#8226;   <a href="#login_UI.py">login_UI.py</a>
  &#8226;   <a href="#matplotlib.backends.qt_compat">matplotlib.backends.qt_compat</a>
+ &#8226;   <a href="#plot_window">plot_window</a>
 
   </div>
 
@@ -6578,6 +6584,7 @@ imported by:
  &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
  &#8226;   <a href="#PyQt5.uic">PyQt5.uic</a>
  &#8226;   <a href="#PyQt5.uic.Loader.loader">PyQt5.uic.Loader.loader</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#answer_hist_UI">answer_hist_UI</a>
  &#8226;   <a href="#answer_section_UI">answer_section_UI</a>
  &#8226;   <a href="#answer_section_UI.py">answer_section_UI.py</a>
@@ -6586,6 +6593,7 @@ imported by:
  &#8226;   <a href="#login_UI">login_UI</a>
  &#8226;   <a href="#login_UI.py">login_UI.py</a>
  &#8226;   <a href="#matplotlib.backends.qt_compat">matplotlib.backends.qt_compat</a>
+ &#8226;   <a href="#plot_window">plot_window</a>
 
   </div>
 
@@ -6606,6 +6614,7 @@ imported by:
  &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
  &#8226;   <a href="#PyQt5.uic.Loader.loader">PyQt5.uic.Loader.loader</a>
  &#8226;   <a href="#PyQt5.uic.Loader.qobjectcreator">PyQt5.uic.Loader.qobjectcreator</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#answer_hist_UI">answer_hist_UI</a>
  &#8226;   <a href="#answer_section_UI">answer_section_UI</a>
  &#8226;   <a href="#answer_section_UI.py">answer_section_UI.py</a>
@@ -6616,6 +6625,7 @@ imported by:
  &#8226;   <a href="#login_UI">login_UI</a>
  &#8226;   <a href="#login_UI.py">login_UI.py</a>
  &#8226;   <a href="#matplotlib.backends.qt_compat">matplotlib.backends.qt_compat</a>
+ &#8226;   <a href="#plot_window">plot_window</a>
 
   </div>
 
@@ -6637,6 +6647,7 @@ imported by:
  &#8226;   <a href="#PyQt5.uic">PyQt5.uic</a>
  &#8226;   <a href="#PyQt5.uic.Loader.loader">PyQt5.uic.Loader.loader</a>
  &#8226;   <a href="#PyQt5.uic.Loader.qobjectcreator">PyQt5.uic.Loader.qobjectcreator</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#answer_hist_UI">answer_hist_UI</a>
  &#8226;   <a href="#answer_section_UI">answer_section_UI</a>
  &#8226;   <a href="#answer_section_UI.py">answer_section_UI.py</a>
@@ -6647,6 +6658,7 @@ imported by:
  &#8226;   <a href="#login_UI">login_UI</a>
  &#8226;   <a href="#login_UI.py">login_UI.py</a>
  &#8226;   <a href="#matplotlib.backends.qt_compat">matplotlib.backends.qt_compat</a>
+ &#8226;   <a href="#plot_window">plot_window</a>
 
   </div>
 
@@ -6698,6 +6710,7 @@ imported by:
  &#8226;   <a href="#PyQt5.uic.port_v3">PyQt5.uic.port_v3</a>
  &#8226;   <a href="#PyQt5.uic.properties">PyQt5.uic.properties</a>
  &#8226;   <a href="#PyQt5.uic.uiparser">PyQt5.uic.uiparser</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#answer_hist_UI">answer_hist_UI</a>
  &#8226;   <a href="#answer_section_UI">answer_section_UI</a>
  &#8226;   <a href="#answer_section_UI.py">answer_section_UI.py</a>
@@ -6705,6 +6718,7 @@ imported by:
  &#8226;   <a href="#course_section_UI">course_section_UI</a>
  &#8226;   <a href="#course_section_UI.py">course_section_UI.py</a>
  &#8226;   <a href="#help">help</a>
+ &#8226;   <a href="#plot_window">plot_window</a>
 
   </div>
 
@@ -7298,6 +7312,31 @@ imported by:
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
     <a href="#jinja2.sandbox">jinja2.sandbox</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="ZITA"></a>
+  <a target="code" href="///D:/CS/Clicker/Repo/ZITA.py" type="text/plain"><tt>ZITA</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt5">PyQt5</a>
+ &#8226;   <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
+ &#8226;   <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
+ &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
+ &#8226;   <a href="#PyQt5.uic">PyQt5.uic</a>
+ &#8226;   <a href="#matplotlib.pyplot">matplotlib.pyplot</a>
+ &#8226;   <a href="#numpy">numpy</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#random">random</a>
+ &#8226;   <a href="#sys">sys</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#course_hist">course_hist</a>
 
   </div>
 
@@ -11188,6 +11227,7 @@ imports:
  &#8226;   <a href="#json">json</a>
  &#8226;   <a href="#matplotlib.pyplot">matplotlib.pyplot</a>
  &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#plot_window">plot_window</a>
  &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#sys">sys</a>
 
@@ -11218,6 +11258,8 @@ imports:
  &#8226;   <a href="#course_section_UI">course_section_UI</a>
  &#8226;   <a href="#help">help</a>
  &#8226;   <a href="#matplotlib.pyplot">matplotlib.pyplot</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#plot_window">plot_window</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#threading">threading</a>
  &#8226;   <a href="#time">time</a>
@@ -17813,6 +17855,7 @@ imports:
  &#8226;   <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
  &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
  &#8226;   <a href="#PyQt5.uic">PyQt5.uic</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#answer_hist_UI">answer_hist_UI</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#sys">sys</a>
@@ -36127,8 +36170,6 @@ imports:
   <div class="import">
 imported by:
     <a href="#Clicker_DB_manager">Clicker_DB_manager</a>
- &#8226;   <a href="#Clicker_UI">Clicker_UI</a>
- &#8226;   <a href="#Clicker_UI.py">Clicker_UI.py</a>
  &#8226;   <a href="#IPython.core.display">IPython.core.display</a>
  &#8226;   <a href="#IPython.core.formatters">IPython.core.formatters</a>
  &#8226;   <a href="#_pytest.cacheprovider">_pytest.cacheprovider</a>
@@ -41298,6 +41339,7 @@ imports:
 imported by:
     <a href="#Clicker_backend">Clicker_backend</a>
  &#8226;   <a href="#Clicker_backend.py">Clicker_backend.py</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#answer_hist_UI">answer_hist_UI</a>
  &#8226;   <a href="#answer_section_UI">answer_section_UI</a>
  &#8226;   <a href="#answer_section_UI.py">answer_section_UI.py</a>
@@ -44884,6 +44926,7 @@ imported by:
  &#8226;   <a href="#IPython.core.magics.namespace">IPython.core.magics.namespace</a>
  &#8226;   <a href="#IPython.lib.display">IPython.lib.display</a>
  &#8226;   <a href="#PIL.Image">PIL.Image</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#_pytest.python_api">_pytest.python_api</a>
  &#8226;   <a href="#ipykernel.pickleutil">ipykernel.pickleutil</a>
  &#8226;   <a href="#matplotlib">matplotlib</a>
@@ -49202,6 +49245,7 @@ imported by:
  &#8226;   <a href="#PyQt5">PyQt5</a>
  &#8226;   <a href="#PyQt5.uic">PyQt5.uic</a>
  &#8226;   <a href="#PyQt5.uic.uiparser">PyQt5.uic.uiparser</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#_bootsubprocess">_bootsubprocess</a>
  &#8226;   <a href="#_distutils_hack">_distutils_hack</a>
  &#8226;   <a href="#_osx_support">_osx_support</a>
@@ -49236,6 +49280,8 @@ imported by:
  &#8226;   <a href="#_sitebuiltins">_sitebuiltins</a>
  &#8226;   <a href="#alabaster">alabaster</a>
  &#8226;   <a href="#answer_hist_UI">answer_hist_UI</a>
+ &#8226;   <a href="#answer_section_UI">answer_section_UI</a>
+ &#8226;   <a href="#answer_section_UI.py">answer_section_UI.py</a>
  &#8226;   <a href="#appdirs">appdirs</a>
  &#8226;   <a href="#argparse">argparse</a>
  &#8226;   <a href="#asyncio.base_events">asyncio.base_events</a>
@@ -53667,6 +53713,28 @@ imports:
 imported by:
     <a href="#pkg_resources">pkg_resources</a>
  &#8226;   <a href="#sphinxcontrib.applehelp">sphinxcontrib.applehelp</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="plot_window"></a>
+  <a target="code" href="///D:/CS/Clicker/Repo/plot_window.py" type="text/plain"><tt>plot_window</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt5">PyQt5</a>
+ &#8226;   <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
+ &#8226;   <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
+ &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
+ &#8226;   <a href="#PyQt5.uic">PyQt5.uic</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#answer_hist_UI">answer_hist_UI</a>
+ &#8226;   <a href="#answer_section_UI">answer_section_UI</a>
+ &#8226;   <a href="#answer_section_UI.py">answer_section_UI.py</a>
 
   </div>
 
@@ -68363,6 +68431,7 @@ imported by:
  &#8226;   <a href="#IPython.lib.pretty">IPython.lib.pretty</a>
  &#8226;   <a href="#IPython.utils.path">IPython.utils.path</a>
  &#8226;   <a href="#PIL.ImagePalette">PIL.ImagePalette</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#click._compat">click._compat</a>
  &#8226;   <a href="#docutils.writers.pep_html">docutils.writers.pep_html</a>
  &#8226;   <a href="#email.generator">email.generator</a>
@@ -82963,6 +83032,7 @@ imported by:
  &#8226;   <a href="#PyQt5.uic.Loader.qobjectcreator">PyQt5.uic.Loader.qobjectcreator</a>
  &#8226;   <a href="#PyQt5.uic.properties">PyQt5.uic.properties</a>
  &#8226;   <a href="#PyQt5.uic.uiparser">PyQt5.uic.uiparser</a>
+ &#8226;   <a href="#ZITA">ZITA</a>
  &#8226;   <a href="#_aix_support">_aix_support</a>
  &#8226;   <a href="#_bootlocale">_bootlocale</a>
  &#8226;   <a href="#_collections_abc">_collections_abc</a>
